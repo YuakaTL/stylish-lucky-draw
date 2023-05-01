@@ -35,6 +35,7 @@ export default function Home() {
           centered={true}
           footer={[
             <CustomButton
+              key="submit"
               text="確認"
               className="w-full bg-purple"
               onClick={handleOk}
