@@ -9,7 +9,7 @@ COPY package*.json yarn.lock* ./
 
 COPY prisma ./prisma/
 
-RUN yarn install && npx prisma generate && yarn cache clean
+RUN npm install && npx prisma generate && npm cache clean --force
 
 # Bundle app source
 FROM node:18-alpine
@@ -20,4 +20,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD [ "yarn", "start" ]
+CMD [ "npm", "start" ]

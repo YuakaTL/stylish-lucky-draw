@@ -1,0 +1,48 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Discount {
+  discount_id Int [pk, increment]
+  event_id Int [not null]
+  discount_name String [not null]
+  discount_value Float [not null]
+  threshold Int [not null]
+  inventory Int [not null]
+  event Event [not null]
+  Info Info [not null]
+}
+
+Table Info {
+  lottery_id Int [pk, increment]
+  member_id Int [not null]
+  discount_id Int [not null]
+  coupon String [unique, not null]
+  is_receive Boolean [not null, default: false]
+  is_used Boolean [not null, default: false]
+  create_time DateTime [default: `now()`, not null]
+  discount Discount [not null]
+}
+
+Table Event {
+  event_id Int [pk, increment]
+  event_name String [not null]
+  is_visible Boolean [not null, default: true]
+  status Event_Status [not null, default: 'pending']
+  start_time DateTime [not null]
+  end_time DateTime [not null]
+  create_time DateTime [default: `now()`, not null]
+  last_update_time DateTime [not null]
+  Discount Discount [not null]
+}
+
+Enum Event_Status {
+  pending
+  ongoing
+  cancelled
+  finished
+}
+
+Ref: Discount.event_id > Event.event_id
+
+Ref: Info.discount_id > Discount.discount_id

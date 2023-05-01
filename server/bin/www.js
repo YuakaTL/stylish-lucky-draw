@@ -9,8 +9,6 @@ const set = app.set.bind(app);
 import debug from "debug";
 debug.debug("server:server");
 import { createServer } from "http";
-import { config } from "dotenv-flow";
-config();
 
 /**
  * Get port from environment and store in Express.

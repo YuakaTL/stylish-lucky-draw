@@ -20,7 +20,7 @@ process.on("uncaughtException", (err) => {
 });
 
 import indexRouter from "./routes/index.js";
-import usersRouter from "./routes/users.js";
+import eventsRouter from "./routes/events.js";
 
 const app = express();
 
@@ -31,7 +31,7 @@ app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use("/api/v1", indexRouter);
-app.use("/api/v1/user", usersRouter);
+app.use("/api/v1/lottery", eventsRouter);
 app.use("/api/v1/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // catch 404 and forward to error handler

@@ -2,16 +2,56 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id       Int     @id @default(autoincrement())
-  provider String  @db.VarChar(255)
-  name     String  @db.VarChar(255)
-  email    String  @unique @db.VarChar(255)
-  password String  @db.VarChar(255)
-  picture  String? @db.VarChar(255)
+model Discount {
+  discount_id    Int    @id @default(autoincrement())
+  event_id       Int
+  discount_name  String
+  discount_value Float
+  threshold      Int
+  inventory      Int
+  event          Event  @relation(fields: [event_id], references: [event_id])
+  Info           Info[]
+
+  @@index([event_id], map: "Discount_event_id_fkey")
+}
+
+model Info {
+  lottery_id  Int      @id @default(autoincrement())
+  member_id   Int
+  discount_id Int
+  coupon      String   @unique
+  is_receive  Boolean  @default(false)
+  is_used     Boolean  @default(false)
+  create_time DateTime @default(now())
+  discount    Discount @relation(fields: [discount_id], references: [discount_id])
+
+  @@index([discount_id], map: "Info_discount_id_fkey")
+}
+
+model Event {
+  event_id         Int          @id @default(autoincrement())
+  event_name       String
+  is_visible       Boolean      @default(true)
+  status           Event_Status @default(pending)
+  start_time       DateTime
+  end_time         DateTime
+  create_time      DateTime     @default(now())
+  last_update_time DateTime     @updatedAt
+  Discount         Discount[]
+}
+
+enum Event_Status {
+  pending
+  ongoing
+  cancelled
+  finished
 }
