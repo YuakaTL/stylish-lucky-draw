@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  nginx:
+    image: louistsaicsie/stylish-lucky-draw-nginx
+    restart: unless-stopped
+    build:
+      context: ../nginx
+    ports:
+      - 3000:80
+    depends_on:
+      - server
+      - client
+  
+  server:
+    image: louistsaicsie/stylish-lucky-draw-server
+    restart: unless-stopped
+    build: 
+      context: ../server
+    # env_file: ../server/.env.production.local
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+
+  client:
+    image: louistsaicsie/stylish-lucky-draw-client
+    restart: unless-stopped
+    build: 
+      context: ../client

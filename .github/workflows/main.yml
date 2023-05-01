@@ -1,0 +1,40 @@
+name: STLiSH Lucky Draw CI/CD
+
+on:
+  push: 
+    branches: ["develop"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code correctness
+      uses: actions/checkout@v2
+    
+    - name: install OpenVPN package
+      run: |
+        sudo apt update
+        sudo apt install -y openvpn openvpn-systemd-resolved
+      
+    - name: Connect openVPN
+      uses: "kota65535/github-openvpn-connect-action@v2"
+      with:
+        config_file: ./.github/workflows/appworks-internal-dns.ovpn
+        username: ${{ secrets.OVPN_USERNAME }}
+        password: ${{ secrets.OVPN_PASSWORD }}
+      
+    - name: Connect to VM
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USERNAME }}
+        key: ${{ secrets.VM_KEY }}
+        script: |
+          cd ~/develop/stylish-lucky-draw
+          git checkout develop
+          git pull origin develop
+          docker-compose down --rmi all
+          cd docker
+          docker-compose build --no-cache
+          docker-compose up -d

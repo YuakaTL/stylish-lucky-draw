@@ -1,0 +1,851 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Lottery API"
+  },
+  "servers": [
+    {
+      "url": "http://192.168.50.104/api/v1",
+      "description": "Production server"
+    }
+  ],
+  "security": [
+    {
+      "Bearer": []
+    }
+  ],
+  "paths": {
+    "/lottery/event": {
+      "get": {
+        "tags": [
+          "client"
+        ],
+        "summary": "取得樂透活動資訊",
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "query",
+            "description": "活動 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功取得樂透活動資訊",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDataResponse"
+                }
+              }
+            }
+          },
+          "999": {
+            "description": "系統未知錯誤"
+          }
+        }
+      }
+    },
+    "/lottery/inventory/{discount_id}": {
+      "put": {
+        "tags": [
+          "client"
+        ],
+        "summary": "更新抽獎券庫存",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "discount_id",
+            "description": "抽獎券 ID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "抽獎券庫存更新請求內容",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "discount_id": {
+                    "type": "integer",
+                    "description": "抽獎券 ID"
+                  },
+                  "increase": {
+                    "type": "boolean",
+                    "description": "要增加還是減少抽獎券庫存"
+                  }
+                },
+                "required": [
+                  "discount_id",
+                  "increase"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "description": "回傳代碼",
+                      "example": "000"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "回傳訊息",
+                      "example": "更新成功"
+                    },
+                    "event_data": {
+                      "type": "object",
+                      "description": "抽獎券詳細資訊",
+                      "properties": {
+                        "discount_id": {
+                          "type": "integer",
+                          "description": "抽獎券 ID"
+                        },
+                        "event_id": {
+                          "type": "integer",
+                          "description": "活動 ID"
+                        },
+                        "discount_name": {
+                          "type": "string",
+                          "description": "折扣券名稱",
+                          "example": "2023/04/28 21:03:00"
+                        },
+                        "inventory": {
+                          "type": "integer",
+                          "description": "庫存量"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "999": {
+            "description": "系統未知錯誤"
+          }
+        }
+      }
+    },
+    "/lottery/receive/{lottery_id}": {
+      "put": {
+        "tags": [
+          "client"
+        ],
+        "summary": "更新抽獎資訊",
+        "parameters": [
+          {
+            "name": "lottery_id",
+            "in": "path",
+            "description": "要更新的抽獎 ID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "抽獎券庫存更新請求內容",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lottery_id": {
+                    "type": "integer",
+                    "description": "抽獎紀錄 ID"
+                  },
+                  "is_received": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "000"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "更新成功"
+                    },
+                    "lottery_data": {
+                      "type": "object",
+                      "properties": {
+                        "lottery_id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "member_id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "event_id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "discount_value": {
+                          "type": "number",
+                          "example": 0.9
+                        },
+                        "coupon": {
+                          "type": "string",
+                          "example": "jreoig"
+                        },
+                        "is_received": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "create_time": {
+                          "type": "string",
+                          "example": "2023/04/28 21:03:00"
+                        },
+                        "is_used": {
+                          "type": "integer",
+                          "example": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "999": {
+            "description": "系統未知錯誤"
+          }
+        }
+      }
+    },
+    "/lottery/info": {
+      "post": {
+        "tags": [
+          "client"
+        ],
+        "summary": "新增抽獎紀錄",
+        "description": "新增抽獎紀錄",
+        "operationId": "addLottery",
+        "requestBody": {
+          "description": "請輸入會員ID、優惠ID、折扣券碼",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "member_id": {
+                    "type": "integer",
+                    "description": "會員ID"
+                  },
+                  "discount_id": {
+                    "type": "integer",
+                    "description": "優惠ID"
+                  },
+                  "coupon": {
+                    "type": "string",
+                    "description": "折扣券碼"
+                  }
+                },
+                "required": [
+                  "member_id",
+                  "discount_id",
+                  "coupon"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "新增成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "description": "回傳代碼"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "回傳訊息"
+                    },
+                    "lottery_data": {
+                      "type": "object",
+                      "properties": {
+                        "lottery_id": {
+                          "type": "integer",
+                          "description": "抽獎紀錄ID"
+                        },
+                        "member_id": {
+                          "type": "integer",
+                          "description": "會員ID"
+                        },
+                        "event_id": {
+                          "type": "integer",
+                          "description": "活動ID"
+                        },
+                        "discount_value": {
+                          "type": "number",
+                          "description": "折扣值",
+                          "example": 0.9
+                        },
+                        "coupon": {
+                          "type": "string",
+                          "description": "折扣券碼"
+                        },
+                        "is_received": {
+                          "type": "boolean",
+                          "description": "是否已領取",
+                          "example": false
+                        },
+                        "create_time": {
+                          "type": "string",
+                          "description": "創建時間",
+                          "example": "2023/04/28 21:03:00"
+                        },
+                        "is_used": {
+                          "type": "integer",
+                          "description": "是否已使用"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "999": {
+            "description": "系統未知錯誤"
+          }
+        }
+      }
+    },
+    "/lottery/member": {
+      "get": {
+        "tags": [
+          "client"
+        ],
+        "summary": "取得會員擁有的優惠券列表",
+        "description": "取得特定會員擁有的優惠券列表",
+        "parameters": [
+          {
+            "name": "member_id",
+            "in": "query",
+            "description": "要查詢的會員ID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功取得資料",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "取得成功"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "discount_name": {
+                            "type": "string",
+                            "description": "優惠券名稱",
+                            "example": "夏日九折券"
+                          },
+                          "discount_value": {
+                            "type": "number",
+                            "description": "折扣值",
+                            "example": 0.9
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/lottery": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "抽獎活動創建",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LotteryEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LotteryEventResponse"
+                }
+              }
+            }
+          },
+          "999": {
+            "description": "系統未知錯誤"
+          },
+          "001": {
+            "description": "未帶必要欄位、格式不符"
+          },
+          "002": {
+            "description": "結束時間需大於開始時間"
+          },
+          "003": {
+            "description": "開始時間需大於設定當日"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "取得活動列表",
+        "description": "取得活動列表",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "paging",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "頁碼"
+          },
+          {
+            "in": "query",
+            "name": "amount",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "每頁顯示筆數"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功取得活動列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LotteryListResponse"
+                }
+              }
+            }
+          },
+          "999": {
+            "description": "系統未知錯誤"
+          }
+        }
+      }
+    },
+    "/admin/lottery/{id}": {
+      "put": {
+        "summary": "抽獎活動修改/刪除",
+        "description": "透過id修改/刪除活動",
+        "tags": [
+          "admin"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LotteryEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LotteryEventResponse"
+                }
+              }
+            }
+          },
+          "999": {
+            "description": "系統未知錯誤"
+          },
+          "001": {
+            "description": "未帶必要欄位、格式不符"
+          },
+          "002": {
+            "description": "結束時間需大於開始時間"
+          },
+          "003": {
+            "description": "開始時間需大於設定當日"
+          },
+          "004": {
+            "description": "活動開始前10分鐘後除隱藏外不可修改任何欄位"
+          }
+        }
+      }
+    },
+    "/admin/record": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "取得獲獎記錄",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "會員 ID"
+          },
+          {
+            "in": "query",
+            "name": "paging",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "default = 1"
+          },
+          {
+            "in": "query",
+            "name": "amount",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "default = 10, 無限 = 999"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordResponse"
+                }
+              }
+            }
+          },
+          "999": {
+            "description": "系統未知錯誤"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "IdParam": {
+        "name": "id",
+        "in": "path",
+        "description": "ID of the resource",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Enter your access token with Bearer prefix"
+      }
+    },
+    "schemas": {
+      "EventDataResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "000"
+          },
+          "message": {
+            "type": "string",
+            "example": "取得成功"
+          },
+          "event_data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "discount_name": {
+                  "type": "string",
+                  "example": "夏日九折券"
+                },
+                "discount_value": {
+                  "type": "number",
+                  "format": "double",
+                  "example": 0.9
+                },
+                "threshold": {
+                  "type": "integer",
+                  "example": 500
+                },
+                "inventory": {
+                  "type": "integer",
+                  "example": 150
+                }
+              }
+            }
+          }
+        }
+      },
+      "LotteryEventRequest": {
+        "type": "object",
+        "properties": {
+          "event_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "event_name": {
+            "type": "string"
+          },
+          "event_start_time": {
+            "type": "string",
+            "format": "date"
+          },
+          "event_end_time": {
+            "type": "string",
+            "format": "date"
+          },
+          "is_visible": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "cancelled",
+              "ongoing",
+              "finished"
+            ]
+          },
+          "event_data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventData"
+            }
+          }
+        }
+      },
+      "EventData": {
+        "type": "object",
+        "properties": {
+          "discount_name": {
+            "type": "string"
+          },
+          "discount_value": {
+            "type": "number",
+            "format": "double"
+          },
+          "threshold": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inventory": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "LotteryEventResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/LotteryEventRequest"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Record": {
+        "type": "object",
+        "properties": {
+          "discount_name": {
+            "type": "string"
+          },
+          "discount_value": {
+            "type": "number"
+          },
+          "member_id": {
+            "type": "string"
+          },
+          "member_name": {
+            "type": "string"
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "coupon": {
+            "type": "string"
+          },
+          "get_coupon_time": {
+            "type": "string"
+          }
+        }
+      },
+      "RecordResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Record"
+            }
+          },
+          "next_paging": {
+            "type": "integer",
+            "example": 2
+          }
+        }
+      },
+      "LotteryListItem": {
+        "type": "object",
+        "properties": {
+          "event_id": {
+            "type": "integer"
+          },
+          "event_name": {
+            "type": "string"
+          },
+          "event_start_time": {
+            "type": "string"
+          },
+          "event_end_time": {
+            "type": "string"
+          },
+          "is_visible": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "cancelled",
+              "ongoing",
+              "finished"
+            ]
+          },
+          "total_inventory": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "event_id",
+          "event_name",
+          "event_start_time",
+          "event_end_time",
+          "is_visible",
+          "status",
+          "total_inventory"
+        ]
+      },
+      "LotteryListResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "000"
+          },
+          "message": {
+            "type": "string",
+            "example": "取得成功"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LotteryListItem"
+            }
+          },
+          "next_paging": {
+            "type": "integer",
+            "example": 2
+          }
+        }
+      }
+    }
+  }
+}
