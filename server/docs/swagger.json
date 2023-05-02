@@ -184,7 +184,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "is_received": {
+                  "is_receive": {
                     "type": "boolean"
                   }
                 }
@@ -237,7 +237,7 @@
                           "type": "string",
                           "example": "jreoig"
                         },
-                        "is_received": {
+                        "is_receive": {
                           "type": "boolean",
                           "example": true
                         },
@@ -352,7 +352,7 @@
                           "type": "string",
                           "description": "折扣券碼"
                         },
-                        "is_received": {
+                        "is_receive": {
                           "type": "boolean",
                           "description": "是否已領取",
                           "example": false
