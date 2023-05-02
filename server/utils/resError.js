@@ -1,16 +1,17 @@
 const resErrorDev = (err, res) => {
   res.status(err.statusCode).json({
-    status: err.status,
+    // status: err.status,
+    code: err.customCode,
     message: err.message,
-    error: err,
-    stack: err.stack,
+    // error: err,
+    // stack: err.stack,
   });
 };
 
 const resErrorProd = (err, res) => {
   if (err.isOperational) {
     res.status(err.statusCode).json({
-      status: err.status,
+      code: err.customCode,
       message: err.message,
     });
   } else {

@@ -13,7 +13,7 @@ const isAuth = handleErrorAsync(async (req, res, next) => {
       jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
           reject(err);
-          throw next(appError(401, "JWT Token 錯誤, 請重新登入", next));
+          throw next(appError(200, "access-token error", "101", next));
         }
         resolve(decoded);
       });
@@ -22,7 +22,7 @@ const isAuth = handleErrorAsync(async (req, res, next) => {
     next();
   }
   if (!token) {
-    throw next(appError(401, "尚未登入", next));
+    throw next(appError(200, "access-token error", "101", next));
   }
 });
 

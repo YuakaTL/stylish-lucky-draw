@@ -18,9 +18,7 @@
   "paths": {
     "/lottery/event": {
       "get": {
-        "tags": [
-          "client"
-        ],
+        "tags": ["client"],
         "summary": "取得樂透活動資訊",
         "parameters": [
           {
@@ -53,9 +51,7 @@
     },
     "/lottery/inventory/{discount_id}": {
       "put": {
-        "tags": [
-          "client"
-        ],
+        "tags": ["client"],
         "summary": "更新抽獎券庫存",
         "parameters": [
           {
@@ -85,10 +81,7 @@
                     "description": "要增加還是減少抽獎券庫存"
                   }
                 },
-                "required": [
-                  "discount_id",
-                  "increase"
-                ]
+                "required": ["discount_id", "increase"]
               }
             }
           }
@@ -147,9 +140,7 @@
     },
     "/lottery/receive/{lottery_id}": {
       "put": {
-        "tags": [
-          "client"
-        ],
+        "tags": ["client"],
         "summary": "更新抽獎資訊",
         "parameters": [
           {
@@ -248,9 +239,7 @@
     },
     "/lottery/info": {
       "post": {
-        "tags": [
-          "client"
-        ],
+        "tags": ["client"],
         "summary": "新增抽獎紀錄",
         "description": "新增抽獎紀錄",
         "operationId": "addLottery",
@@ -275,11 +264,7 @@
                     "description": "折扣券碼"
                   }
                 },
-                "required": [
-                  "member_id",
-                  "discount_id",
-                  "coupon"
-                ]
+                "required": ["member_id", "discount_id", "coupon"]
               }
             }
           }
@@ -353,9 +338,7 @@
     },
     "/lottery/member": {
       "get": {
-        "tags": [
-          "client"
-        ],
+        "tags": ["client"],
         "summary": "取得會員擁有的優惠券列表",
         "description": "取得特定會員擁有的優惠券列表",
         "parameters": [
@@ -413,9 +396,7 @@
     },
     "/admin/lottery": {
       "post": {
-        "tags": [
-          "admin"
-        ],
+        "tags": ["admin"],
         "summary": "抽獎活動創建",
         "requestBody": {
           "content": {
@@ -452,9 +433,7 @@
         }
       },
       "get": {
-        "tags": [
-          "admin"
-        ],
+        "tags": ["admin"],
         "summary": "取得活動列表",
         "description": "取得活動列表",
         "parameters": [
@@ -496,9 +475,7 @@
       "put": {
         "summary": "抽獎活動修改/刪除",
         "description": "透過id修改/刪除活動",
-        "tags": [
-          "admin"
-        ],
+        "tags": ["admin"],
         "parameters": [
           {
             "$ref": "#/components/parameters/IdParam"
@@ -545,9 +522,7 @@
     },
     "/admin/record": {
       "get": {
-        "tags": [
-          "admin"
-        ],
+        "tags": ["admin"],
         "summary": "取得獲獎記錄",
         "parameters": [
           {
@@ -678,12 +653,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "pending",
-              "cancelled",
-              "ongoing",
-              "finished"
-            ]
+            "enum": ["pending", "cancelled", "ongoing", "finished"]
           },
           "event_data": {
             "type": "array",
@@ -802,12 +772,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "pending",
-              "cancelled",
-              "ongoing",
-              "finished"
-            ]
+            "enum": ["pending", "cancelled", "ongoing", "finished"]
           },
           "total_inventory": {
             "type": "integer"
