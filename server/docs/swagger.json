@@ -35,6 +35,12 @@
           }
         ],
         "responses": {
+          "100": {
+            "description": "輸入值不符合規定"
+          },
+          "101": {
+            "description": "access-token error"
+          },
           "200": {
             "description": "成功取得樂透活動資訊",
             "content": {
@@ -47,6 +53,9 @@
           },
           "999": {
             "description": "系統未知錯誤"
+          },
+          "001": {
+            "description": "未帶必要欄位"
           }
         }
       }
@@ -76,10 +85,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "discount_id": {
-                    "type": "integer",
-                    "description": "抽獎券 ID"
-                  },
                   "increase": {
                     "type": "boolean",
                     "description": "要增加還是減少抽獎券庫存"
@@ -94,6 +99,12 @@
           }
         },
         "responses": {
+          "100": {
+            "description": "輸入值不符合規定"
+          },
+          "101": {
+            "description": "access-token error"
+          },
           "200": {
             "description": "更新成功",
             "content": {
@@ -141,6 +152,9 @@
           },
           "999": {
             "description": "系統未知錯誤"
+          },
+          "001": {
+            "description": "未帶必要欄位"
           }
         }
       }
@@ -170,11 +184,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "lottery_id": {
-                    "type": "integer",
-                    "description": "抽獎紀錄 ID"
-                  },
-                  "is_received": {
+                  "is_receive": {
                     "type": "boolean"
                   }
                 }
@@ -183,6 +193,12 @@
           }
         },
         "responses": {
+          "100": {
+            "description": "輸入值不符合規定"
+          },
+          "101": {
+            "description": "access-token error"
+          },
           "200": {
             "description": "更新成功",
             "content": {
@@ -221,17 +237,17 @@
                           "type": "string",
                           "example": "jreoig"
                         },
-                        "is_received": {
-                          "type": "integer",
-                          "example": 1
+                        "is_receive": {
+                          "type": "boolean",
+                          "example": true
                         },
                         "create_time": {
                           "type": "string",
                           "example": "2023/04/28 21:03:00"
                         },
                         "is_used": {
-                          "type": "integer",
-                          "example": 0
+                          "type": "boolean",
+                          "example": false
                         }
                       }
                     }
@@ -242,6 +258,12 @@
           },
           "999": {
             "description": "系統未知錯誤"
+          },
+          "001": {
+            "description": "未帶必要欄位"
+          },
+          "005": {
+            "description": "超過30秒未領取"
           }
         }
       }
@@ -285,6 +307,12 @@
           }
         },
         "responses": {
+          "100": {
+            "description": "輸入值不符合規定"
+          },
+          "101": {
+            "description": "access-token error"
+          },
           "200": {
             "description": "新增成功",
             "content": {
@@ -324,7 +352,7 @@
                           "type": "string",
                           "description": "折扣券碼"
                         },
-                        "is_received": {
+                        "is_receive": {
                           "type": "boolean",
                           "description": "是否已領取",
                           "example": false
@@ -335,8 +363,9 @@
                           "example": "2023/04/28 21:03:00"
                         },
                         "is_used": {
-                          "type": "integer",
-                          "description": "是否已使用"
+                          "type": "boolean",
+                          "description": "是否已使用",
+                          "example": false
                         }
                       }
                     }
@@ -347,6 +376,12 @@
           },
           "999": {
             "description": "系統未知錯誤"
+          },
+          "001": {
+            "description": "未帶必要欄位"
+          },
+          "006": {
+            "description": "此會員沒有可用的折價卷"
           }
         }
       }
@@ -370,6 +405,12 @@
           }
         ],
         "responses": {
+          "100": {
+            "description": "輸入值不符合規定"
+          },
+          "101": {
+            "description": "access-token error"
+          },
           "200": {
             "description": "成功取得資料",
             "content": {
@@ -407,6 +448,9 @@
                 }
               }
             }
+          },
+          "001": {
+            "description": "未帶必要欄位"
           }
         }
       }
@@ -427,6 +471,9 @@
           }
         },
         "responses": {
+          "100": {
+            "description": "輸入值不符合規定"
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -441,13 +488,16 @@
             "description": "系統未知錯誤"
           },
           "001": {
-            "description": "未帶必要欄位、格式不符"
+            "description": "未帶必要欄位"
           },
           "002": {
             "description": "結束時間需大於開始時間"
           },
           "003": {
             "description": "開始時間需大於設定當日"
+          },
+          "004": {
+            "description": "活動開始前10分鐘後除隱藏外不可新增/修改任何欄位"
           }
         }
       },
@@ -476,6 +526,9 @@
           }
         ],
         "responses": {
+          "100": {
+            "description": "輸入值不符合規定"
+          },
           "200": {
             "description": "成功取得活動列表",
             "content": {
@@ -488,6 +541,9 @@
           },
           "999": {
             "description": "系統未知錯誤"
+          },
+          "001": {
+            "description": "未帶必要欄位"
           }
         }
       }
@@ -529,7 +585,7 @@
             "description": "系統未知錯誤"
           },
           "001": {
-            "description": "未帶必要欄位、格式不符"
+            "description": "未帶必要欄位"
           },
           "002": {
             "description": "結束時間需大於開始時間"
@@ -578,6 +634,9 @@
           }
         ],
         "responses": {
+          "100": {
+            "description": "輸入值不符合規定"
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -590,6 +649,9 @@
           },
           "999": {
             "description": "系統未知錯誤"
+          },
+          "001": {
+            "description": "未帶必要欄位"
           }
         }
       }
@@ -658,10 +720,6 @@
       "LotteryEventRequest": {
         "type": "object",
         "properties": {
-          "event_id": {
-            "type": "integer",
-            "format": "int64"
-          },
           "event_name": {
             "type": "string"
           },
