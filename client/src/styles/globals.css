@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.login .ant-modal-content {
+  border-radius: 50px 4px !important;
+}
