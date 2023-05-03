@@ -1,8 +1,8 @@
-const successHandle = (res, message, event_data) => {
+const successHandle = (res, message, data) => {
   res.status(200).json({
     code: "000",
     message,
-    event_data,
+    data,
   });
 };
 

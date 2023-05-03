@@ -13,6 +13,13 @@ const Validator = {
     }
   },
 
+  couponValidate: (param, text, next) => {
+    const couponRegex = /^[a-zA-Z\d]{10}$/
+    if(!couponRegex.test(param) && param !== undefined){
+      throw next(appError(200, `輸入值不符合規定`, "100", next));
+    }
+  },
+
   existValidate: (param, text, next) => {
     if (!param) {
       throw next(appError(200, `未帶必要欄位`, "001", next));
