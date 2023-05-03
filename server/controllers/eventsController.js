@@ -5,16 +5,18 @@ import validator from "../utils/validation.js";
 
 const eventsController = {
   getEventDetail: async (req, res, next) => {
+    validator.existValidate(req.query.event_id, "event_id", next);
     validator.numberValidate(req.query.event_id, "event_id", next);
     const result = await eventsModel.getEventDetail(req.query.event_id);
 
-    if (!result) {
-      throw next(appError(400, "該活動不存在", next));
-    }
+    console.log(result);
 
-    const event_data = [
-      ...result,
-    ];
+    const event_data = result.map((event) => ({
+      discount_name: event.discount_name,
+      discount_value: event.discount_value,
+      threshold: event.threshold,
+      inventory: event.inventory,
+    }));
 
     successHandle(res, "取得成功", event_data);
   },
