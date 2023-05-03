@@ -71,6 +71,34 @@ export const mockLotteryEventResponse = {
     ],
 };
 
+export const mockLotteryInventoryResponse = {
+    code: "000",
+    message: "更新成功",
+    event_data: {
+        discount_id: 1,
+        event_id: 1,
+        discount_name: "夏日九折券",
+        inventory: 150,
+    },
+};
+
+export const mockLotteryReceiveResponse = {
+    code: "000",
+    message: "更新成功",
+    lottery_data: {
+        lottery_id: 1,
+        member_id: 1,
+        event_id: 1,
+        discount_value: 0.9,
+        discount_id: 1,
+        discount_name: "夏日九折券",
+        coupon: "jreoig",
+        is_receive: true,
+        create_time: "2023/04/28 21:03:00",
+        is_used: false,
+    },
+};
+
 export const mockLotteryMemberResponse = {
     code: "000",
     message: "取得成功",
@@ -91,7 +119,7 @@ export const mockLotteryInfoResponse = {
         event_id: 1,
         discount_value: 0.9,
         coupon: "jreoig",
-        is_received: false,
+        is_receive: false,
         create_time: "2023/04/28 21:03:00",
         is_used: false,
     },
