@@ -20,6 +20,25 @@ const eventsController = {
 
     successHandle(res, "取得成功", event_data);
   },
+
+  updateInventory: async (req, res, next) => {
+    validator.existValidate(req.params.discount_id, "discount_id", next);
+    console.log(req.body.increase);
+    validator.existValidate(req.body.increase, "increase", next);
+    validator.booleanValidate(req.body.increase, "increase", next);
+
+    const result = await eventsModel.updateInventory(
+      req.params.discount_id,
+      req.body.increase
+    );
+
+    successHandle(res, "更新成功", {
+      discount_id: result.discount_id,
+      event_id: result.event_id,
+      discount_name: result.discount_name,
+      inventory: result.inventory,
+    });
+  },
 };
 
 export default eventsController;
