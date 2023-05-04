@@ -25,6 +25,11 @@ const Validator = {
     }
   },
 
+  booleanValidate: (param, text, next) => {
+    if (typeof param !== "boolean") {
+      throw next(appError(200, `輸入值不符合規定`, "100", next));
+    }
+  },
   // createUserIsValidate: (req, next) => {
   //   const { name, email, password } = req.body;
   //   if (!name || !email || !password) {
