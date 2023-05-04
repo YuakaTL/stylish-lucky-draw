@@ -36,6 +36,11 @@ export const mockAccessTokenError = {
     message: ERROR_MESSAGE.accessTokenErrorMessage,
 };
 
+export const mockMemberNoDiscountError = {
+    code: CODE.memberNoDiscountError,
+    message: ERROR_MESSAGE.memberNoDiscountErrorMessage,
+};
+
 export const mockAdminRecordResponse = {
     code: "000",
     message: "取得獲獎紀錄",

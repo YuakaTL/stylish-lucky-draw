@@ -8,7 +8,13 @@
 2. `yarn install` 來安裝需要的 package (jest, supertest)
 3. run 本地 server
 > 註: 沒有 yarn 的話可以使用 `npm install -g yarn` 先安裝
-
+4. 新增 .env flie
+   1. 新增 JWT for access_token
+   2. 若要使用 MockData.js 來 "測試" test.js file，將 USE_MOCK_DATA 設為 true
+```
+USE_MOCK_DATA = ""
+TEST_ACCESS_TOKEN = ""
+```
 
 ## 使用方式
 - `yarn test` 來 run 所有的 test file 

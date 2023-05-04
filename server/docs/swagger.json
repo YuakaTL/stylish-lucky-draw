@@ -115,7 +115,7 @@
                       "description": "回傳訊息",
                       "example": "更新成功"
                     },
-                    "event_data": {
+                    "data": {
                       "type": "object",
                       "description": "抽獎券詳細資訊",
                       "properties": {
@@ -205,7 +205,7 @@
                       "type": "string",
                       "example": "更新成功"
                     },
-                    "lottery_data": {
+                    "data": {
                       "type": "object",
                       "properties": {
                         "lottery_id": {
@@ -280,13 +280,9 @@
                   "discount_id": {
                     "type": "integer",
                     "description": "優惠ID"
-                  },
-                  "coupon": {
-                    "type": "string",
-                    "description": "折扣券碼"
                   }
                 },
-                "required": ["member_id", "discount_id", "coupon"]
+                "required": ["member_id", "discount_id"]
               }
             }
           }
@@ -313,7 +309,7 @@
                       "type": "string",
                       "description": "回傳訊息"
                     },
-                    "lottery_data": {
+                    "data": {
                       "type": "object",
                       "properties": {
                         "lottery_id": {
@@ -665,7 +661,7 @@
             "type": "string",
             "example": "取得成功"
           },
-          "event_data": {
+          "data": {
             "type": "array",
             "items": {
               "type": "object",
@@ -713,7 +709,7 @@
             "type": "string",
             "enum": ["pending", "cancelled", "ongoing", "finished"]
           },
-          "event_data": {
+          "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/EventData"

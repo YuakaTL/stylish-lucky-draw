@@ -1,3 +1,4 @@
+import { customAlphabet } from "nanoid";
 import { eventsModel } from "../models/eventsModel.js";
 import appError from "../utils/appError.js";
 import successHandle from "../utils/successHandle.js";
@@ -21,6 +22,7 @@ const eventsController = {
     successHandle(res, "取得成功", event_data);
   },
 
+
   updateInventory: async (req, res, next) => {
     validator.existValidate(req.params.discount_id, "discount_id", next);
     validator.existValidate(req.body.increase, "increase", next);
@@ -38,6 +40,40 @@ const eventsController = {
       discount_name: result.discount_name,
       inventory: result.inventory,
     });
+
+  createInfo: async (req, res, next) => {
+    const { member_id, discount_id } = req.body;
+    validator.existValidate(member_id, "member_id", next);
+    validator.existValidate(discount_id, "discount_id", next);
+    validator.numberValidate(member_id, "member_id", next);
+    validator.numberValidate(discount_id, "discount_id", next);
+
+    const alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    const generateRandomString = customAlphabet(alphabet, 10)
+    const coupon = generateRandomString()
+
+    const result = await eventsModel.createInfo(
+      member_id,
+      discount_id,
+      coupon,
+      next
+    );
+
+    console.log(result);
+
+    const info_data = {
+      lottery_id: result.result_info.lottery_id,
+      member_id: result.result_info.member_id,
+      event_id: result.result_discount.event_id,
+      discount_value: result.result_discount.discount_value,
+      coupon: result.result_info.coupon,
+      is_receive: result.result_info.is_receive,
+      is_used: result.result_info.is_used,
+      create_time: result.result_info.create_time,
+    };
+
+    successHandle(res, "新增成功", info_data);
+
   },
 };
 
