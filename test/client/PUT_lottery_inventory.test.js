@@ -38,24 +38,21 @@ describe(`POST ${apiEndpoint}`, () => {
 
         expect(lotteryInfo).toHaveProperty("code", CODE.success);
         expect(lotteryInfo).toHaveProperty("message", "更新成功");
-        expect(lotteryInfo).toHaveProperty("event_data");
-        expect(lotteryInfo.event_data).toHaveProperty(
+        expect(lotteryInfo).toHaveProperty("data");
+        expect(lotteryInfo.data).toHaveProperty(
             "discount_id",
             expect.any(Number)
         );
-        expect(lotteryInfo.event_data).toHaveProperty(
+        expect(lotteryInfo.data).toHaveProperty(
             "discount_id",
             params.discount_id
         );
-        expect(lotteryInfo.event_data).toHaveProperty(
-            "event_id",
-            expect.any(Number)
-        );
-        expect(lotteryInfo.event_data).toHaveProperty(
+        expect(lotteryInfo.data).toHaveProperty("event_id", expect.any(Number));
+        expect(lotteryInfo.data).toHaveProperty(
             "discount_name",
             expect.any(String)
         );
-        expect(lotteryInfo.event_data).toHaveProperty(
+        expect(lotteryInfo.data).toHaveProperty(
             "inventory",
             expect.any(Number)
         );

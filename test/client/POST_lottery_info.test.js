@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const apiEndpoint = "/api/v1/lottery/info";
-let input = { member_id: 1, discount_id: 1, coupon: "couponCode" };
+let input = { member_id: 1, discount_id: 1 };
 let headers = { Authorization: `Bearer ${process.env.TEST_ACCESS_TOKEN}` };
 
 describe(`POST ${apiEndpoint}`, () => {
@@ -36,36 +36,29 @@ describe(`POST ${apiEndpoint}`, () => {
 
         expect(lotteryInfo).toHaveProperty("code", CODE.success);
         expect(lotteryInfo).toHaveProperty("message", "新增成功");
-        expect(lotteryInfo).toHaveProperty("lottery_data");
-        expect(lotteryInfo.lottery_data).toHaveProperty(
+        expect(lotteryInfo).toHaveProperty("data");
+        expect(lotteryInfo.data).toHaveProperty(
             "lottery_id",
             expect.any(Number)
         );
-        expect(lotteryInfo.lottery_data).toHaveProperty(
-            "member_id",
-            input.member_id
-        );
-        expect(lotteryInfo.lottery_data).toHaveProperty(
+        expect(lotteryInfo.data).toHaveProperty("member_id", input.member_id);
+        expect(lotteryInfo.data).toHaveProperty(
             "discount_value",
             expect.any(Number)
         );
-        expect(lotteryInfo.lottery_data).toHaveProperty(
-            "coupon",
-            expect.any(String)
-        );
-        expect(lotteryInfo.lottery_data).toHaveProperty(
+
+        expect(lotteryInfo.data).toHaveProperty("coupon", expect.any(String));
+        const couponRegex = /^[a-zA-Z\d]{10}$/;
+        expect(lotteryInfo.data.coupon).toMatch(couponRegex);
+        expect(lotteryInfo.data).toHaveProperty(
             "is_receive",
             expect.any(Boolean)
         );
-        //TODO: check the time format for "create_time"
-        expect(lotteryInfo.lottery_data).toHaveProperty(
+        expect(lotteryInfo.data).toHaveProperty(
             "create_time",
             expect.any(String)
         );
-        expect(lotteryInfo.lottery_data).toHaveProperty(
-            "is_used",
-            expect.any(Boolean)
-        );
+        expect(lotteryInfo.data).toHaveProperty("is_used", expect.any(Boolean));
     });
 
     //* access_token not provided
@@ -112,28 +105,28 @@ describe(`POST ${apiEndpoint}`, () => {
         );
     });
 
-    //* params not complete error check (coupon is not provided)
-    it(`should response with a ${CODE.queryRequiredError} if the request params is not complete`, async () => {
-        let error;
-        const input = { member_id: 123, discount_id: 456 };
+    // //* params not complete error check (coupon is not provided)
+    // it(`should response with a ${CODE.queryRequiredError} if the request params is not complete`, async () => {
+    //     let error;
+    //     const input = { member_id: 123, discount_id: 456 };
 
-        if (process.env.USE_MOCK_DATA) {
-            error = MOCK_DATA.mockQueryRequiredError;
-        } else {
-            const response = await request(app)
-                .post(apiEndpoint)
-                .set(headers)
-                .query(input)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            error = response.body;
-        }
-        expect(error).toHaveProperty("code", CODE.queryRequiredError);
-        expect(error).toHaveProperty(
-            "message",
-            ERROR_MESSAGE.queryRequiredErrorMessage
-        );
-    });
+    //     if (process.env.USE_MOCK_DATA) {
+    //         error = MOCK_DATA.mockQueryRequiredError;
+    //     } else {
+    //         const response = await request(app)
+    //             .post(apiEndpoint)
+    //             .set(headers)
+    //             .query(input)
+    //             .expect("Content-Type", /json/)
+    //             .expect(200);
+    //         error = response.body;
+    //     }
+    //     expect(error).toHaveProperty("code", CODE.queryRequiredError);
+    //     expect(error).toHaveProperty(
+    //         "message",
+    //         ERROR_MESSAGE.queryRequiredErrorMessage
+    //     );
+    // });
 
     //* params value error check (member_id is not exist or invalid)
     it(`should response with a ${CODE.inputValueInvalidError} if the request params value is invalid`, async () => {
@@ -201,26 +194,26 @@ describe(`POST ${apiEndpoint}`, () => {
             ERROR_MESSAGE.inputValueInvalidErrorMessage
         );
     });
-    //* params value error check (coupon type is invalid)
-    it(`should response with a ${CODE.inputValueInvalidError} if the request params is not provided`, async () => {
-        let error;
-        input.coupon = false;
+    // //* params value error check (coupon type is invalid)
+    // it(`should response with a ${CODE.inputValueInvalidError} if the request params is not provided`, async () => {
+    //     let error;
+    //     input.coupon = false;
 
-        if (process.env.USE_MOCK_DATA) {
-            error = MOCK_DATA.mockInputValueInvalidError;
-        } else {
-            const response = await request(app)
-                .post(apiEndpoint)
-                .set(headers)
-                .query(input)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            error = response.body;
-        }
-        expect(error).toHaveProperty("code", CODE.inputValueInvalidError);
-        expect(error).toHaveProperty(
-            "message",
-            ERROR_MESSAGE.inputValueInvalidErrorMessage
-        );
-    });
+    //     if (process.env.USE_MOCK_DATA) {
+    //         error = MOCK_DATA.mockInputValueInvalidError;
+    //     } else {
+    //         const response = await request(app)
+    //             .post(apiEndpoint)
+    //             .set(headers)
+    //             .query(input)
+    //             .expect("Content-Type", /json/)
+    //             .expect(200);
+    //         error = response.body;
+    //     }
+    //     expect(error).toHaveProperty("code", CODE.inputValueInvalidError);
+    //     expect(error).toHaveProperty(
+    //         "message",
+    //         ERROR_MESSAGE.inputValueInvalidErrorMessage
+    //     );
+    // });
 });

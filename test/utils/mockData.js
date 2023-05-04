@@ -61,7 +61,7 @@ export const mockAdminRecordResponse = {
 export const mockLotteryEventResponse = {
     code: "000",
     message: "取得成功",
-    event_data: [
+    data: [
         {
             discount_name: "夏日九折券",
             discount_value: 0.9,
@@ -74,7 +74,7 @@ export const mockLotteryEventResponse = {
 export const mockLotteryInventoryResponse = {
     code: "000",
     message: "更新成功",
-    event_data: {
+    data: {
         discount_id: 1,
         event_id: 1,
         discount_name: "夏日九折券",
@@ -85,7 +85,7 @@ export const mockLotteryInventoryResponse = {
 export const mockLotteryReceiveResponse = {
     code: "000",
     message: "更新成功",
-    lottery_data: {
+    data: {
         lottery_id: 1,
         member_id: 1,
         event_id: 1,
@@ -113,12 +113,12 @@ export const mockLotteryMemberResponse = {
 export const mockLotteryInfoResponse = {
     code: "000",
     message: "新增成功",
-    lottery_data: {
+    data: {
         lottery_id: 1,
         member_id: 1,
         event_id: 1,
         discount_value: 0.9,
-        coupon: "jreoig",
+        coupon: "AbCd123456",
         is_receive: false,
         create_time: "2023/04/28 21:03:00",
         is_used: false,

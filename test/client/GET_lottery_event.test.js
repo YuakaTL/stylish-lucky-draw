@@ -36,12 +36,12 @@ describe(`GET ${apiEndpoint}`, () => {
 
         expect(lotteryEvent).toHaveProperty("code", CODE.success);
         expect(lotteryEvent).toHaveProperty("message", "取得成功");
-        expect(lotteryEvent).toHaveProperty("event_data");
-        expect(Array.isArray(lotteryEvent.event_data)).toBe(true);
+        expect(lotteryEvent).toHaveProperty("data");
+        expect(Array.isArray(lotteryEvent.data)).toBe(true);
         // expect(lotteryList).toHaveProperty("next_paging");
 
         //* 檢查每一個 event 中的內容是否正確
-        for (const event of lotteryEvent.event_data) {
+        for (const event of lotteryEvent.data) {
             expect(event).toHaveProperty("discount_name");
             expect(typeof event.discount_name).toBe("string");
             expect(event).toHaveProperty("discount_value");
@@ -98,7 +98,7 @@ describe(`GET ${apiEndpoint}`, () => {
             ERROR_MESSAGE.accessTokenErrorMessage
         );
     });
-    //* event_id error check(not provided)
+    //* if params is not provided
     it(`should response with a CODE ${CODE.queryRequiredError} if the params is undefined`, async () => {
         let error;
         params = undefined;

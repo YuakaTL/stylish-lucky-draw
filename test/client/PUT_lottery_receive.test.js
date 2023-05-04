@@ -38,39 +38,30 @@ describe(`POST ${apiEndpoint}`, () => {
 
         expect(lotteryInfo).toHaveProperty("code", CODE.success);
         expect(lotteryInfo).toHaveProperty("message", "更新成功");
-        expect(lotteryInfo).toHaveProperty("lottery_data");
-        expect(lotteryInfo.lottery_data).toHaveProperty(
+        expect(lotteryInfo).toHaveProperty("data");
+        expect(lotteryInfo.data).toHaveProperty(
             "lottery_id",
             expect.any(Number)
         );
-        expect(lotteryInfo.lottery_data).toHaveProperty(
+        expect(lotteryInfo.data).toHaveProperty(
             "member_id",
             expect.any(Number)
         );
-        expect(lotteryInfo.lottery_data).toHaveProperty(
-            "event_id",
-            expect.any(Number)
-        );
-        expect(lotteryInfo.lottery_data).toHaveProperty(
+        expect(lotteryInfo.data).toHaveProperty("event_id", expect.any(Number));
+        expect(lotteryInfo.data).toHaveProperty(
             "discount_value",
             expect.any(Number)
         );
-        expect(lotteryInfo.lottery_data).toHaveProperty(
-            "coupon",
-            expect.any(String)
-        );
-        expect(lotteryInfo.lottery_data).toHaveProperty(
+        expect(lotteryInfo.data).toHaveProperty("coupon", expect.any(String));
+        expect(lotteryInfo.data).toHaveProperty(
             "is_receive",
             expect.any(Boolean)
         );
-        expect(lotteryInfo.lottery_data).toHaveProperty(
+        expect(lotteryInfo.data).toHaveProperty(
             "create_time",
             expect.any(String)
         );
-        expect(lotteryInfo.lottery_data).toHaveProperty(
-            "is_used",
-            expect.any(Boolean)
-        );
+        expect(lotteryInfo.data).toHaveProperty("is_used", expect.any(Boolean));
     });
 
     //* access_token not provided
