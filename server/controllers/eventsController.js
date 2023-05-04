@@ -40,7 +40,7 @@ const eventsController = {
       discount_name: result.discount_name,
       inventory: result.inventory,
     });
-
+  },
   createInfo: async (req, res, next) => {
     const { member_id, discount_id } = req.body;
     validator.existValidate(member_id, "member_id", next);
