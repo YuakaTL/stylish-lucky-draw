@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import appError from "../utils/appError.js";
 
 const prisma = new PrismaClient();
 
@@ -13,26 +14,34 @@ const eventsModel = {
     return result;
   },
 
-  updateInventory: async (discountId, increase) => {
+  updateInventory: async (discountId, increase, next) => {
     // if increase is true then increase inventory
     const increment = increase ? 1 : -1;
-    const result = await prisma.discount.update({
-      where: {
-        discount_id: parseInt(discountId),
-      },
-      data: {
-        inventory: {
-          increment,
+    try {
+      const result = await prisma.discount.update({
+        where: {
+          discount_id: parseInt(discountId),
         },
-      },
-      select: {
-        discount_id: true,
-        event_id: true,
-        discount_name: true,
-        inventory: true,
-      },
-    });
-    return result;
+        data: {
+          inventory: {
+            increment,
+          },
+        },
+        select: {
+          discount_id: true,
+          event_id: true,
+          discount_name: true,
+          inventory: true,
+        },
+      });
+      return result;
+    } catch (error) {
+      // Prisma error code for missing record
+      if (error.code === "P2025") {
+        throw next(appError(200, `輸入值不符合規定`, "100", next));
+      }
+      throw next(appError(200, `系統未知錯誤`, "999", next));
+    }
   },
 };
 

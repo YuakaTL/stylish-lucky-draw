@@ -23,13 +23,13 @@ const eventsController = {
 
   updateInventory: async (req, res, next) => {
     validator.existValidate(req.params.discount_id, "discount_id", next);
-    console.log(req.body.increase);
     validator.existValidate(req.body.increase, "increase", next);
     validator.booleanValidate(req.body.increase, "increase", next);
 
     const result = await eventsModel.updateInventory(
       req.params.discount_id,
-      req.body.increase
+      req.body.increase,
+      next
     );
 
     successHandle(res, "更新成功", {
