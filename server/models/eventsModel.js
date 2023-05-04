@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import axios from "axios";
 import appError from "../utils/appError.js";
 const prisma = new PrismaClient();
 
@@ -14,19 +15,19 @@ const eventsModel = {
   },
   createInfo: async (member_id, discount_id, coupon, next) => {
     try{
-      const result_1 = await prisma.info.create({
+      const result_info = await prisma.info.create({
         data:{
           member_id: parseInt(member_id),
           discount_id: parseInt(discount_id),
           coupon: coupon,
           }
       });
-      const result_2 = await prisma.discount.findUnique({
+      const result_discount = await prisma.discount.findUnique({
         where:{
-          discount_id: parseInt(result_1.discount_id)
+          discount_id: parseInt(result_info.discount_id)
         }
       });
-      return {result_1, result_2}
+      return {result_info, result_discount}
     } catch (err) {
         console.log(err)
         if(err.code === 'P2003' || err.code === 'P2002')

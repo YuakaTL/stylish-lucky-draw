@@ -32,8 +32,6 @@ const eventsController = {
     const generateRandomString = customAlphabet(alphabet, 10)
     const coupon = generateRandomString()
 
-    validator.couponValidate(coupon, "coupon", next);
-
     const result = await eventsModel.createInfo(
       member_id,
       discount_id,
@@ -44,14 +42,14 @@ const eventsController = {
     console.log(result);
 
     const info_data = {
-      lottery_id: result.result_1.lottery_id,
-      member_id: result.result_1.member_id,
-      event_id: result.result_2.event_id,
-      discount_value: result.result_2.discount_value,
-      coupon: result.result_1.coupon,
-      is_receive: result.result_1.is_receive,
-      is_used: result.result_1.is_used,
-      create_time: result.result_1.create_time,
+      lottery_id: result.result_info.lottery_id,
+      member_id: result.result_info.member_id,
+      event_id: result.result_discount.event_id,
+      discount_value: result.result_discount.discount_value,
+      coupon: result.result_info.coupon,
+      is_receive: result.result_info.is_receive,
+      is_used: result.result_info.is_used,
+      create_time: result.result_info.create_time,
     };
 
     successHandle(res, "新增成功", info_data);
