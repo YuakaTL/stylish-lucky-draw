@@ -41,6 +41,15 @@ export const mockMemberNoDiscountError = {
     message: ERROR_MESSAGE.memberNoDiscountErrorMessage,
 };
 
+export const mockStartTimeIncorrectError = {
+    code: CODE.StartTimeIncorrectError,
+    message: ERROR_MESSAGE.StartTimeIncorrectErrorMessage,
+};
+export const mockEndTimeIncorrectError = {
+    code: CODE.EndTimeIncorrectError,
+    message: ERROR_MESSAGE.EndTimeIncorrectErrorMessage,
+};
+
 export const mockAdminRecordResponse = {
     code: "000",
     message: "取得獲獎紀錄",
@@ -61,7 +70,7 @@ export const mockAdminRecordResponse = {
 export const mockLotteryEventResponse = {
     code: "000",
     message: "取得成功",
-    event_data: [
+    data: [
         {
             discount_name: "夏日九折券",
             discount_value: 0.9,
@@ -69,6 +78,34 @@ export const mockLotteryEventResponse = {
             inventory: 150,
         },
     ],
+};
+
+export const mockLotteryInventoryResponse = {
+    code: "000",
+    message: "更新成功",
+    data: {
+        discount_id: 1,
+        event_id: 1,
+        discount_name: "夏日九折券",
+        inventory: 150,
+    },
+};
+
+export const mockLotteryReceiveResponse = {
+    code: "000",
+    message: "更新成功",
+    data: {
+        lottery_id: 1,
+        member_id: 1,
+        event_id: 1,
+        discount_value: 0.9,
+        discount_id: 1,
+        discount_name: "夏日九折券",
+        coupon: "jreoig",
+        is_receive: true,
+        create_time: "2023/04/28 21:03:00",
+        is_used: false,
+    },
 };
 
 export const mockLotteryMemberResponse = {
@@ -85,13 +122,13 @@ export const mockLotteryMemberResponse = {
 export const mockLotteryInfoResponse = {
     code: "000",
     message: "新增成功",
-    lottery_data: {
+    data: {
         lottery_id: 1,
         member_id: 1,
         event_id: 1,
         discount_value: 0.9,
-        coupon: "jreoig",
-        is_received: false,
+        coupon: "AbCd123456",
+        is_receive: false,
         create_time: "2023/04/28 21:03:00",
         is_used: false,
     },
