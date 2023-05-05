@@ -81,8 +81,8 @@ const adminController = {
     }
     if(amount) {
         validator.numberValidate(amount, "amount", next);
-        if (amount !== undefined && parseInt(amount) !== 1 && parseInt(amount) !== 10 && parseInt(amount) !== 50 && parseInt(amount) !== 999) {
-            throw next(appError("輸入值不符合規定", 100));
+        if (amount !== undefined && parseInt(amount) !== 10 && parseInt(amount) !== 50 && parseInt(amount) !== 999) {
+            throw next(appError(200, "輸入值不符合規定", 100, next));
         }
     }
 
@@ -101,7 +101,7 @@ const adminController = {
         total_inventory: item.Discount.map((discount) => discount.inventory).reduce((a, b) => a + b),
     }));
 
-    if (result.length > pageSize) {
+    if (result.length > pageSize && pageSize < 999) {
         const data = {
             lottery: lottery.slice(0, pageSize),
             next_paging: page + 1,
