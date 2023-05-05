@@ -1,5 +1,6 @@
 import { adminModel } from "../models/adminModel.js";
 import successHandle from "../utils/successHandle.js";
+import appError from "../utils/appError.js";
 import validator from "../utils/validation.js";
 
 const adminController = {
@@ -74,12 +75,15 @@ const adminController = {
 
   getLottery: async (req, res, next) => {
     const { paging, amount } = req.query;
-
+    
     if(paging) {
         validator.numberValidate(paging, "paging", next);
     }
     if(amount) {
         validator.numberValidate(amount, "amount", next);
+        if (amount !== undefined && parseInt(amount) !== 1 && parseInt(amount) !== 10 && parseInt(amount) !== 50 && parseInt(amount) !== 999) {
+            throw next(appError("輸入值不符合規定", 100));
+        }
     }
 
     const page = paging? parseInt(paging) : 1;
