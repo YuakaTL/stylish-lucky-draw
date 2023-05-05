@@ -41,6 +41,15 @@ export const mockMemberNoDiscountError = {
     message: ERROR_MESSAGE.memberNoDiscountErrorMessage,
 };
 
+export const mockStartTimeIncorrectError = {
+    code: CODE.StartTimeIncorrectError,
+    message: ERROR_MESSAGE.StartTimeIncorrectErrorMessage,
+};
+export const mockEndTimeIncorrectError = {
+    code: CODE.EndTimeIncorrectError,
+    message: ERROR_MESSAGE.EndTimeIncorrectErrorMessage,
+};
+
 export const mockAdminRecordResponse = {
     code: "000",
     message: "取得獲獎紀錄",
