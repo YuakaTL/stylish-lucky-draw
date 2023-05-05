@@ -1,4 +1,8 @@
 import Image from "next/image";
+import facebook from "/public/facebook.svg";
+import instagram from "/public/instagram.svg";
+import home from "/public/home.svg";
+
 import { Playfair_Display } from "next/font/google";
 
 const playfairDisplay = Playfair_Display({ subsets: ["latin"] });
@@ -13,7 +17,7 @@ export default function Footer() {
         <div className="flex gap-4">
           <Image
             alt="facebook"
-            src="/facebook.svg"
+            src={facebook}
             width={0}
             height={0}
             sizes="100vw"
@@ -21,7 +25,7 @@ export default function Footer() {
           />
           <Image
             alt="instagram"
-            src="/instagram.svg"
+            src={instagram}
             width={0}
             height={0}
             sizes="100vw"
@@ -29,7 +33,7 @@ export default function Footer() {
           />
           <Image
             alt="home"
-            src="/home.svg"
+            src={home}
             width={0}
             height={0}
             sizes="100vw"

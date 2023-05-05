@@ -2,6 +2,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Modal, Form, Input } from "antd";
 import CustomButton from "@/components/button";
+import profile_circle from "/public/profile_circle.svg";
 import { Playfair_Display } from "next/font/google";
 const playfairDisplay = Playfair_Display({ subsets: ["latin"] });
 
@@ -41,7 +42,7 @@ export default function Header() {
       </h1>
       <Image
         alt="login"
-        src="/profile_circle.svg"
+        src={profile_circle}
         width={0}
         height={0}
         sizes="100vw"
