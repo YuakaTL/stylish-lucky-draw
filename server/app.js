@@ -21,6 +21,7 @@ process.on("uncaughtException", (err) => {
 
 import indexRouter from "./routes/index.js";
 import eventsRouter from "./routes/events.js";
+import adminRouter from "./routes/admin.js";
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use(cookieParser());
 
 app.use("/api/v1", indexRouter);
 app.use("/api/v1/lottery", eventsRouter);
+app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // catch 404 and forward to error handler
