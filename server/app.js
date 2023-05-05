@@ -4,6 +4,8 @@ import logger from "morgan";
 import cors from "cors";
 import { resErrorDev, resErrorProd } from "./utils/resError.js";
 import { Prisma } from "@prisma/client";
+import dotenv from "dotenv";
+dotenv.config();
 
 import * as swaggerUi from "swagger-ui-express";
 import { readFile } from "fs/promises";

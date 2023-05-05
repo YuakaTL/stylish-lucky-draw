@@ -13,6 +13,19 @@ const eventsModel = {
     return result;
   },
 
+  getMemberPrize: async (id) => {
+    const result = await prisma.info.findMany({
+      where: {
+        member_id: parseInt(id),
+        is_receive: true,
+        is_used: false
+      },
+      include: {
+        discount: true
+      }
+    });
+    return result;
+  },
 
   updateInventory: async (discountId, increase, next) => {
     // if increase is true then increase inventory
