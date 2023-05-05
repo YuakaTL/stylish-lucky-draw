@@ -1,6 +1,12 @@
-export default function AdminDashboard() {
+import PrizeRecordPage from "@/components/prizeRecordPage";
+
+export default function Home() {
   return (
-    <div>AdminDashboardPage</div>
+    <main>
+      <>
+        <PrizeRecordPage />
+      </>
+    </main>
   );
 }
-AdminDashboard.Layout = "Admin";
+Home.Layout = "Admin";
