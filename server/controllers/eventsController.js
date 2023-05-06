@@ -1,8 +1,14 @@
 import { customAlphabet } from "nanoid";
 import { eventsModel } from "../models/eventsModel.js";
+import https from "https";
+import axios from "axios";
 import appError from "../utils/appError.js";
 import successHandle from "../utils/successHandle.js";
 import validator from "../utils/validation.js";
+
+const agent = new https.Agent({
+  rejectUnauthorized: false,
+});
 
 const eventsController = {
   getEventDetail: async (req, res, next) => {
@@ -78,27 +84,40 @@ const eventsController = {
     const generateRandomString = customAlphabet(alphabet, 10);
     const coupon = generateRandomString();
 
-    const result = await eventsModel.createInfo(
-      member_id,
-      discount_id,
-      coupon,
-      next
-    );
+    axios
+      .get(
+        `http://member-api.appworks.local/api/v1/admin/members/${member_id}`,
+        { httpsAgent: agent }
+      )
+      .then(async (response) => {
+        const member_name = response.data.data.username;
+        const result = await eventsModel.createInfo(
+          member_id,
+          member_name,
+          discount_id,
+          coupon,
+          next
+        );
 
-    console.log(result);
+        console.log(result);
 
-    const info_data = {
-      lottery_id: result.result_info.lottery_id,
-      member_id: result.result_info.member_id,
-      event_id: result.result_discount.event_id,
-      discount_value: result.result_discount.discount_value,
-      coupon: result.result_info.coupon,
-      is_receive: result.result_info.is_receive,
-      is_used: result.result_info.is_used,
-      create_time: result.result_info.create_time,
-    };
+        const info_data = {
+          lottery_id: result.result_info.lottery_id,
+          member_id: result.result_info.member_id,
+          member_name: result.result_info.member_name,
+          event_id: result.result_discount.event_id,
+          discount_value: result.result_discount.discount_value,
+          coupon: result.result_info.coupon,
+          is_receive: result.result_info.is_receive,
+          is_used: result.result_info.is_used,
+          create_time: result.result_info.create_time,
+        };
 
-    successHandle(res, "新增成功", info_data);
+        successHandle(res, "新增成功", info_data);
+      })
+      .catch(() => {
+        throw next(appError(200, `系統未知錯誤`, "999", next));
+      });
   },
 };
 

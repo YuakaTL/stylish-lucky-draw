@@ -27,6 +27,7 @@ model Discount {
 model Info {
   lottery_id  Int      @id @default(autoincrement())
   member_id   Int
+  member_name String
   discount_id Int
   coupon      String   @unique
   is_receive  Boolean  @default(false)
