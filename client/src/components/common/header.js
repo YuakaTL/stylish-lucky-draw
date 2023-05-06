@@ -1,24 +1,75 @@
 import Image from "next/image";
-import { useState } from "react";
-import { Modal, Form, Input } from "antd";
+import { useEffect, useState } from "react";
+import { Modal, Form, Input, message } from "antd";
 import CustomButton from "@/components/button";
 import profile_circle from "/public/profile_circle.svg";
+import logoutImg from "/public/logout.png";
 import { Playfair_Display } from "next/font/google";
+import axios from "axios";
 const playfairDisplay = Playfair_Display({ subsets: ["latin"] });
 
 export default function Header() {
+  const [isLogin, setIsLogin] = useState(false);
   const [openLogin, setLoginOpen] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      setIsLogin(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleEnter = (e) => {
+      if (e.key === "Enter") {
+        form.submit();
+      }
+    };
+    document.addEventListener("keydown", handleEnter);
+    return () => document.removeEventListener("keydown", handleEnter);
+  }, [form]);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    messageApi.open({
+      type: 'success',
+      content: '登出成功',
+    });
+    setIsLogin(false);
+  };
 
   const showLoginModal = () => setLoginOpen(true);
   const handleLoginCancel = () => setLoginOpen(false);
   const handleOk = () => setLoginOpen(false);
 
   const onFinish = async (values) => {
-    console.log("Success:", values);
-    form.resetFields();
-    setLoginOpen(false);
-    // let result = await axios.post("/api/user/login", values);
+    try {
+      let result = await axios.post(
+        "http://member-api.appworks.local/api/v1/client/login",
+        values
+      );
+      if (result.data.data.access_token) {
+        localStorage.setItem("token", result.data.data.access_token);
+        messageApi.open({
+          type: 'success',
+          content: '登入成功',
+        });
+      }
+      form.resetFields();
+      setLoginOpen(false);
+    } catch (error) {
+      form.setFields([
+        {
+          name: "username",
+          errors: ["使用者名稱或密碼錯誤"],
+        },
+        {
+          name: "password",
+          errors: ["使用者名稱或密碼錯誤"],
+        },
+      ]);
+    }
   };
 
   const CustomFormItem = ({ rules = [], label, ...restProps }) => {
@@ -41,13 +92,13 @@ export default function Header() {
         StyLish
       </h1>
       <Image
-        alt="login"
-        src={profile_circle}
+        alt={isLogin ? "logout" : "login"}
+        src={isLogin ? logoutImg : profile_circle}
         width={0}
         height={0}
         sizes="100vw"
         className="ml-auto h-auto w-auto cursor-pointer"
-        onClick={showLoginModal}
+        onClick={isLogin ? logout : showLoginModal}
       />
       <Modal
         open={openLogin}
@@ -106,6 +157,7 @@ export default function Header() {
           </Form>
         </div>
       </Modal>
+      {contextHolder}
     </div>
   );
 }
