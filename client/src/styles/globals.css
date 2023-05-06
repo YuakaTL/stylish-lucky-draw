@@ -5,3 +5,18 @@
 .login .ant-modal-content {
   border-radius: 50px 4px !important;
 }
+
+.ant-pagination-item{
+  border: none !important;
+  background-color: #E0E0E0 !important;
+}
+.ant-pagination-item a {
+  color: #000 !important;
+}
+.ant-pagination-item-active {
+  border: none !important;
+  background-color: #1E1E1E !important;
+}
+.ant-pagination-item-active a {
+  color: #fff !important;
+}
