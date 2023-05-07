@@ -21,6 +21,7 @@ const eventsController = {
 
     successHandle(res, "取得成功", event_data);
   },
+
   createInfo: async (req, res, next) => {
     const { member_id, discount_id } = req.body;
     validator.existValidate(member_id, "member_id", next);
@@ -28,9 +29,10 @@ const eventsController = {
     validator.numberValidate(member_id, "member_id", next);
     validator.numberValidate(discount_id, "discount_id", next);
 
-    const alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    const generateRandomString = customAlphabet(alphabet, 10)
-    const coupon = generateRandomString()
+    const alphabet =
+      "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const generateRandomString = customAlphabet(alphabet, 10);
+    const coupon = generateRandomString();
 
     const result = await eventsModel.createInfo(
       member_id,
