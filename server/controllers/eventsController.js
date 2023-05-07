@@ -99,8 +99,6 @@ const eventsController = {
           next
         );
 
-        console.log(result);
-
         const info_data = {
           lottery_id: result.result_info.lottery_id,
           member_id: result.result_info.member_id,
