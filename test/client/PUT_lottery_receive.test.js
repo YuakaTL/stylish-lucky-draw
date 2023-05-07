@@ -218,7 +218,7 @@ describe(`POST ${apiEndpoint}`, () => {
  * @returns
  */
 async function getResponseFromAPIEndpoint() {
-    const response = await axios.get(`${apiEndpoint}`, {
+    const response = await axios.put(`${apiEndpoint}`, {
         headers,
         params,
     });

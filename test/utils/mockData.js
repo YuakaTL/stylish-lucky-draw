@@ -161,3 +161,26 @@ export const mockAdminLotteryPostResponse = {
     create_at: "2023-04-26T00:00:00.00000",
     update_at: "2023-04-26T00:00:00.00000",
 };
+
+export const mockAdminLotteryPutResponse = {
+    code: "000",
+    message: "修改成功",
+    data: {
+        event_id: 1,
+        event_name: "",
+        event_start_time: "2023/04/01",
+        event_end_time: "2023/04/30",
+        is_visible: true,
+        status: "pending",
+        event_data: [
+            {
+                discount_name: "夏日九折券",
+                discount_value: 0.9,
+                threshold: 500,
+                inventory: 150,
+            },
+        ],
+    },
+    create_at: "2023-04-26T00:00:00.00000",
+    update_at: "2023-04-26T00:00:00.00000",
+};
