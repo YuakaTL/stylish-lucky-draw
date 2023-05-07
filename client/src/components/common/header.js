@@ -11,6 +11,7 @@ const playfairDisplay = Playfair_Display({ subsets: ["latin"] });
 export default function Header() {
   const [isLogin, setIsLogin] = useState(false);
   const [openLogin, setLoginOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
 
@@ -33,8 +34,8 @@ export default function Header() {
   const logout = () => {
     localStorage.removeItem("token");
     messageApi.open({
-      type: 'success',
-      content: '登出成功',
+      type: "success",
+      content: "登出成功",
     });
     setIsLogin(false);
   };
@@ -44,32 +45,30 @@ export default function Header() {
   const handleOk = () => setLoginOpen(false);
 
   const onFinish = async (values) => {
-    try {
-      let result = await axios.post(
-        "http://member-api.appworks.local/api/v1/client/login",
-        values
-      );
-      if (result.data.data.access_token) {
-        localStorage.setItem("token", result.data.data.access_token);
+    setConfirmLoading(true);
+    axios
+      .post("http://member-api.appworks.local/api/v1/client/login", values)
+      .then((result) => {
+        if (result.data.data.access_token) {
+          localStorage.setItem("token", result.data.data.access_token);
+          messageApi.open({
+            type: "success",
+            content: "登入成功",
+          });
+          setIsLogin(true);
+        }
+        form.resetFields();
+        setLoginOpen(false);
+      })
+      .catch((e) => {
         messageApi.open({
-          type: 'success',
-          content: '登入成功',
+          type: "error",
+          content: "使用者名稱或密碼錯誤",
         });
-      }
-      form.resetFields();
-      setLoginOpen(false);
-    } catch (error) {
-      form.setFields([
-        {
-          name: "username",
-          errors: ["使用者名稱或密碼錯誤"],
-        },
-        {
-          name: "password",
-          errors: ["使用者名稱或密碼錯誤"],
-        },
-      ]);
-    }
+      })
+      .finally(() => {
+        setConfirmLoading(false);
+      });
   };
 
   const CustomFormItem = ({ rules = [], label, ...restProps }) => {
@@ -149,6 +148,7 @@ export default function Header() {
                 key="submit"
                 text="登入"
                 className="w-full bg-purple"
+                isLoading={confirmLoading}
                 onClick={() => {
                   form.submit();
                 }}
