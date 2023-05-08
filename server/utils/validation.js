@@ -1,5 +1,4 @@
 import appError from "./appError.js";
-import validator from "validator";
 
 const Validator = {
   numberValidate: (param, text, next) => {

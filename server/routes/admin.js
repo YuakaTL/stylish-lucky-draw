@@ -34,7 +34,7 @@ const upload = multer({
   },
 });
 
-const { getRecord, getLottery, createLottery } = adminController;
+const { getLottery, updateLottery, getRecord, createLottery } = adminController;
 
 router.get("/record", handleErrorAsync(getRecord));
 router.get("/lottery", handleErrorAsync(getLottery));
@@ -42,6 +42,11 @@ router.post(
   "/lottery",
   upload.single("excel_file"),
   handleErrorAsync(createLottery)
+);
+router.put(
+  "/lottery/:event_id",
+  upload.single("excel_file"),
+  handleErrorAsync(updateLottery)
 );
 
 export default router;
