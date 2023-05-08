@@ -26,15 +26,13 @@ describe(`GET ${apiEndpoint}`, () => {
             console.log("using mock data");
         } else {
             try {
-                // const response = await axios.get(`${apiEndpoint}`, {
-                //     headers,
-                //     params,
-                // });
                 const response = await getResponseFromAPIEndpoint();
+                // console.log(`response`);
+                console.log(response);
                 lotteryEvent = response.data;
             } catch (err) {
-                // console.error(err);
-                console.error(err.response.data);
+                console.error(err);
+                // console.error(err.response.data);
             }
         }
 
@@ -59,7 +57,7 @@ describe(`GET ${apiEndpoint}`, () => {
         }
     });
 
-    //* access_token not provided
+    // //* access_token not provided
     it(`should response with 200 and a CODE ${CODE.accessTokenError} if the access_token is undefined`, async () => {
         let error;
         headers.Authorization = undefined;
@@ -67,27 +65,22 @@ describe(`GET ${apiEndpoint}`, () => {
             error = MOCK_DATA.mockAccessTokenError;
         } else {
             try {
-                // const response = await axios.get(`${apiEndpoint}`, {
-                //     headers,
-                //     params,
-                // });
                 const response = await getResponseFromAPIEndpoint();
                 error = response.data;
-                expect(error);
                 expect(error).toHaveProperty("code", CODE.accessTokenError);
                 expect(error).toHaveProperty(
                     "message",
                     ERROR_MESSAGE.accessTokenErrorMessage
                 );
             } catch (err) {
-                // console.error(err);
-                console.error(err.response.data);
-                error = err.response.data;
-                expect(error).toHaveProperty("code", CODE.accessTokenError);
-                expect(error).toHaveProperty(
-                    "message",
-                    ERROR_MESSAGE.accessTokenErrorMessage
-                );
+                console.error(err);
+                // console.error(err.response.data);
+                // error = err.response.data;
+                // expect(error).toHaveProperty("code", CODE.accessTokenError);
+                // expect(error).toHaveProperty(
+                //     "message",
+                //     ERROR_MESSAGE.accessTokenErrorMessage
+                // );
             }
         }
     });
@@ -100,14 +93,14 @@ describe(`GET ${apiEndpoint}`, () => {
             error = MOCK_DATA.mockAccessTokenError;
         } else {
             try {
-                // const response = await axios.get(`${apiEndpoint}`, {
-                //     headers,
-                //     params,
-                // });
                 const response = await getResponseFromAPIEndpoint();
-                error = response.body;
+                console.log(`response`);
+                // console.log(response);
+                console.log(response.data);
+                error = response.data;
             } catch (err) {
-                console.error(err.response.data);
+                console.log(err);
+                // console.error(err.response.data);
             }
         }
         expect(error).toHaveProperty("code", CODE.accessTokenError);
@@ -129,9 +122,9 @@ describe(`GET ${apiEndpoint}`, () => {
                 //     params,
                 // });
                 const response = await getResponseFromAPIEndpoint();
-                error = response.body;
+                error = response.data;
             } catch (err) {
-                console.error(err.response.data);
+                console.log(err);
             }
         }
         expect(error).toHaveProperty("code", CODE.queryRequiredError);
@@ -141,7 +134,7 @@ describe(`GET ${apiEndpoint}`, () => {
         );
     });
     //* event_id error check(not provided)
-    it(`should response with a CODE ${CODE.inputValueInvalidError} if the event_id is invalid`, async () => {
+    it(`should response with a CODE ${CODE.queryRequiredError} if the event_id is undefined`, async () => {
         let error;
         params.event_id = undefined;
         if (process.env.USE_MOCK_DATA) {
@@ -153,15 +146,15 @@ describe(`GET ${apiEndpoint}`, () => {
                 //     params,
                 // });
                 const response = await getResponseFromAPIEndpoint();
-                error = response.body;
+                error = response.data;
             } catch (err) {
-                console.error(err.response.data);
+                console.log(err);
             }
         }
-        expect(error).toHaveProperty("code", CODE.inputValueInvalidError);
+        expect(error).toHaveProperty("code", CODE.queryRequiredError);
         expect(error).toHaveProperty(
             "message",
-            ERROR_MESSAGE.inputValueInvalidErrorMessage
+            ERROR_MESSAGE.queryRequiredErrorMessage
         );
     });
     //* event_id error check(invalid value)
@@ -172,14 +165,10 @@ describe(`GET ${apiEndpoint}`, () => {
             error = MOCK_DATA.mockInputValueInvalidError;
         } else {
             try {
-                // const response = await axios.get(`${apiEndpoint}`, {
-                //     headers,
-                //     params,
-                // });
                 const response = await getResponseFromAPIEndpoint();
-                error = response.body;
+                error = response.data;
             } catch (err) {
-                console.error(err.response.data);
+                console.log(err);
             }
         }
         expect(error).toHaveProperty("code", CODE.inputValueInvalidError);

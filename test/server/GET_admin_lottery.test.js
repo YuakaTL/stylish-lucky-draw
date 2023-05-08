@@ -4,9 +4,11 @@ import ERROR_MESSAGE from "../utils/customStatusCodeMessage.js";
 import request from "supertest";
 import app from "../../server/app.js";
 import dotenv from "dotenv";
+import axios from "axios";
 dotenv.config();
 
-const apiEndpoint = "/api/v1/admin/lottery";
+// const apiEndpoint = "/api/v1/admin/lottery";
+const apiEndpoint = "http://localhost:5000/api/v1/admin/lottery";
 let params = { paging: 1, amount: 10 };
 
 describe(`GET ${apiEndpoint}`, () => {
@@ -20,23 +22,20 @@ describe(`GET ${apiEndpoint}`, () => {
             lotteryList = MOCK_DATA.mockAdminLotteryGetResponse;
             console.log("using mock data");
         } else {
-            const response = await request(app)
-                .get(apiEndpoint)
-                .query(params)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            console.log("not using mock data");
-
-            lotteryList = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                lotteryList = response.data;
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         expect(lotteryList).toHaveProperty("code", CODE.success);
         expect(lotteryList).toHaveProperty("message", "取得成功");
         expect(lotteryList).toHaveProperty("data");
-        expect(Array.isArray(lotteryList.data)).toBe(true);
-        // expect(lotteryList).toHaveProperty("next_paging");
+        expect(Array.isArray(lotteryList.data.lottery)).toBe(true);
 
-        for (const lottery of lotteryList.data) {
+        for (const lottery of lotteryList.data.lottery) {
             expect(lottery).toHaveProperty("event_id");
             expect(lottery.event_id).toBeGreaterThan(0);
             expect(lottery).toHaveProperty("event_name");
@@ -67,14 +66,12 @@ describe(`GET ${apiEndpoint}`, () => {
             console.log(`error:`);
             console.log(error);
         } else {
-            const response = await request(app)
-                .get(apiEndpoint)
-                .query(params)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            console.log("not using mock data");
-
-            error = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                error = response.data;
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         expect(error).toHaveProperty("code", CODE.inputValueInvalidError);
@@ -91,14 +88,12 @@ describe(`GET ${apiEndpoint}`, () => {
             error = MOCK_DATA.mockInputValueInvalidError;
             console.log("using mock data");
         } else {
-            const response = await request(app)
-                .get(apiEndpoint)
-                .query(params)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            console.log("not using mock data");
-
-            error = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                error = response.data;
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         expect(error).toHaveProperty("code", CODE.inputValueInvalidError);
@@ -108,3 +103,15 @@ describe(`GET ${apiEndpoint}`, () => {
         );
     });
 });
+
+/**
+ * * Get response from API endpoint
+ * @returns
+ */
+async function getResponseFromAPIEndpoint() {
+    const response = await axios.get(`${apiEndpoint}`, {
+        params,
+    });
+
+    return response;
+}
