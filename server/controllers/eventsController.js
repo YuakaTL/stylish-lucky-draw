@@ -27,6 +27,24 @@ const eventsController = {
 
     successHandle(res, "取得成功", event_data);
   },
+
+  getMemberPrize: async (req, res, next) => {
+    validator.existValidate(req.query.member_id, "member_id", next);
+    validator.numberValidate(req.query.member_id, "member_id", next);
+    const member_result = await eventsModel.getMemberPrize(req.query.member_id);
+
+    if(member_result.length === 0){
+      throw next(appError(200, `此會員沒有可用的折價卷`, "006", next));
+    }
+
+    const prize_data = member_result.map((prize) => ({
+      discount_name: prize.discount.discount_name,
+      discount_value: prize.discount.discount_value,
+    }));
+
+    successHandle(res, "取得成功", prize_data);
+  },
+
   updateInventory: async (req, res, next) => {
     validator.existValidate(req.params.discount_id, "discount_id", next);
     validator.existValidate(req.body.increase, "increase", next);

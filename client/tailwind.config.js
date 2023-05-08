@@ -22,6 +22,9 @@ module.exports = {
         yellow: {
           DEFAULT: "#FCB401",
         },
+        adminGray:{
+          DEFAULT: "#C7C7C7",
+        }
       },
       boxShadow: {
         DEFAULT: "0px 4px 10px rgba(0, 0, 0, 0.25)",
