@@ -66,6 +66,12 @@ const Validator = {
       throw next(appError(200, `此會員沒有可用的折價卷`, "006", next));
     }
   },
+
+  booleanValidate: (param, text, next) => {
+    if (typeof param !== "boolean") {
+      throw next(appError(200, `輸入值不符合規定`, "100", next));
+    }
+  },
 };
 
 export default Validator;

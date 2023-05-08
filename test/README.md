@@ -6,7 +6,7 @@
 ## 事先準備
 1. cd to the test directory
 2. `yarn install` 來安裝需要的 package (jest, supertest)
-3. run 本地 server
+3. run 本地 server(localhost:5000)
 > 註: 沒有 yarn 的話可以使用 `npm install -g yarn` 先安裝
 4. 新增 .env flie
    1. 新增 JWT for access_token

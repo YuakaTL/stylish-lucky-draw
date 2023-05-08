@@ -16,6 +16,7 @@ Table Discount {
 Table Info {
   lottery_id Int [pk, increment]
   member_id Int [not null]
+  member_name String [not null]
   discount_id Int [not null]
   coupon String [unique, not null]
   is_receive Boolean [not null, default: false]
