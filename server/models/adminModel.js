@@ -173,7 +173,6 @@ const adminModel = {
     });
     return result;
   },
-
   getLottery: async (page, pageSize) => {
     if (pageSize === 999) {
       const result = await prisma.event.findMany({
