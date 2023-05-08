@@ -16,9 +16,11 @@ const resErrorProd = (err, res) => {
     });
   } else {
     console.error("出現重大錯誤", err);
-    res.status(500).json({
-      status: "error",
-      message: "系統錯誤，請恰系統管理員",
+    res.status(200).json({
+      // status: "error",
+      code: "999",
+      message: "系統未知錯誤",
+      // message: err.message,
     });
   }
 };
