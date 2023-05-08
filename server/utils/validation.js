@@ -22,7 +22,7 @@ const Validator = {
   // 001 未帶必要欄位
   existValidate: (param, text, next) => {
     if (!param) {
-      throw next(appError(200, text, "001", next));
+      throw next(appError(200, `未帶必要欄位`, "001", next));
     }
   },
 
