@@ -102,11 +102,12 @@ const eventsModel = {
       console.log(err);
     }
   },
-  createInfo: async (member_id, discount_id, coupon, next) => {
+  createInfo: async (member_id, member_name, discount_id, coupon, next) => {
     try {
       const result_info = await prisma.info.create({
         data: {
           member_id: parseInt(member_id),
+          member_name: member_name,
           discount_id: parseInt(discount_id),
           coupon: coupon,
         },
