@@ -34,6 +34,32 @@ const eventsController = {
           throw next(appError(200, `使用者註冊未滿三個月`, "102", next));
         else {
           // 拿取會員近一個月消費金額
+          // timestamp of one month age
+          const oneMonthAgo = new Date().getTime() - 30 * 24 * 60 * 60 * 1000;
+
+          // get order before one month
+          const ordersInOneMonth = response.data.data.items.filter(
+            (order) => new Date(order.order_at).getTime() >= oneMonthAgo
+          );
+
+          // sum refund amount
+          const totalRefundAmount = ordersInOneMonth.reduce((sum, order) => {
+            const refundAmount = order.refunds.reduce(
+              (refundSum, refund) => refundSum + refund.refund_amount,
+              0
+            );
+            return sum + refundAmount;
+          }, 0);
+
+          // sum order amount
+          const totalAmount = ordersInOneMonth.reduce(
+            (sum, order) => sum + order.order_amount,
+            0
+          );
+
+          console.log(
+            `近一個月內的金額總和為 ${totalAmount - totalRefundAmount} 元。`
+          );
 
           // 用GET /event 拿取獎品列表，使用最低threshold檢查是否符合抽獎資格，若庫存為0也回傳不能抽獎
           axios
