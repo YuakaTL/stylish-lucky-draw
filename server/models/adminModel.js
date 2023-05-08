@@ -3,7 +3,6 @@ import appError from "../utils/appError.js";
 const prisma = new PrismaClient();
 
 const adminModel = {
-
   getRecord: async (id, paging, amount, next) => {
     if (id === undefined) {
       // infinite
@@ -89,7 +88,8 @@ const adminModel = {
           return { record: result, next_paging: parseInt(paging) + 1 };
         else return { record: result };
       }
-
+    }
+  },
   getLottery: async (page, pageSize) => {
     if (pageSize === 999) {
       const result = await prisma.event.findMany({
@@ -107,7 +107,6 @@ const adminModel = {
         },
       });
       return result;
-
     }
   },
 };

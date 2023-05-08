@@ -4,7 +4,6 @@ import appError from "../utils/appError.js";
 import validator from "../utils/validation.js";
 
 const adminController = {
-
   getRecord: async (req, res, next) => {
     var { id, paging, amount } = req.query;
     validator.numberValidate(id, "member_id", next);
@@ -37,7 +36,7 @@ const adminController = {
         record,
         next_paging: result.next_paging,
       });
-
+  },
   getLottery: async (req, res, next) => {
     const { paging, amount } = req.query;
 
@@ -85,7 +84,6 @@ const adminController = {
       };
       successHandle(res, "取得成功", data);
     }
-
   },
 };
 
