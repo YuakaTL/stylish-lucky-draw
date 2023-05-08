@@ -2,7 +2,6 @@ import { PrismaClient, Prisma } from "@prisma/client";
 import validator from "../utils/validation.js";
 import appError from "../utils/appError.js";
 const prisma = new PrismaClient();
-import validator from "../utils/validation.js";
 
 const adminModel = {
   getRecord: async (id, paging, amount, next) => {
