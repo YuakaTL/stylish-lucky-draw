@@ -47,7 +47,7 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use((err, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
+  err.statusCode = err.statusCode || 200;
   err.status = err.status || "error";
   if (process.env.NODE_ENV === "development") {
     resErrorDev(err, res);

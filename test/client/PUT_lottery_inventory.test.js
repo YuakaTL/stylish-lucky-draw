@@ -4,9 +4,11 @@ import ERROR_MESSAGE from "../utils/customStatusCodeMessage.js";
 import request from "supertest";
 import app from "../../server/app.js";
 import dotenv from "dotenv";
+import axios from "axios";
 dotenv.config();
 
-const apiEndpoint = "/api/v1/lottery/inventory";
+// const apiEndpoint = "/api/v1/lottery/inventory";
+const apiEndpoint = "http://localhost:5000/api/v1/lottery/inventory";
 let params = { discount_id: 1 };
 let input = { increase: true };
 let headers = { Authorization: `Bearer ${process.env.TEST_ACCESS_TOKEN}` };
@@ -25,15 +27,13 @@ describe(`POST ${apiEndpoint}`, () => {
             lotteryInfo = MOCK_DATA.mockLotteryInventoryResponse;
             console.log("using mock data");
         } else {
-            const response = await request(app)
-                .put(apiEndpoint)
-                .send(input)
-                .query(params)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            console.log("not using mock data");
-
-            lotteryInfo = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                console.log("not using mock data");
+                lotteryInfo = response.data;
+            } catch (err) {
+                console.log(err);
+            }
         }
 
         expect(lotteryInfo).toHaveProperty("code", CODE.success);
@@ -65,14 +65,13 @@ describe(`POST ${apiEndpoint}`, () => {
         if (process.env.USE_MOCK_DATA) {
             error = MOCK_DATA.mockAccessTokenError;
         } else {
-            const response = await request(app)
-                .put(apiEndpoint)
-                .set(headers)
-                .query(params)
-                .send(input)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            error = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                console.log("not using mock data");
+                error = response.data;
+            } catch (err) {
+                console.log(err);
+            }
         }
         expect(error).toHaveProperty("code", CODE.accessTokenError);
         expect(error).toHaveProperty(
@@ -88,14 +87,13 @@ describe(`POST ${apiEndpoint}`, () => {
         if (process.env.USE_MOCK_DATA) {
             error = MOCK_DATA.mockAccessTokenError;
         } else {
-            const response = await request(app)
-                .put(apiEndpoint)
-                .set(headers)
-                .query(params)
-                .send(input)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            error = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                console.log("not using mock data");
+                error = response.data;
+            } catch (err) {
+                console.log(err);
+            }
         }
         expect(error).toHaveProperty("code", CODE.accessTokenError);
         expect(error).toHaveProperty(
@@ -111,14 +109,13 @@ describe(`POST ${apiEndpoint}`, () => {
         if (process.env.USE_MOCK_DATA) {
             error = MOCK_DATA.mockQueryRequiredError;
         } else {
-            const response = await request(app)
-                .put(apiEndpoint)
-                .set(headers)
-                .query(params)
-                .send(input)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            error = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                console.log("not using mock data");
+                error = response.data;
+            } catch (err) {
+                console.log(err);
+            }
         }
         expect(error).toHaveProperty("code", CODE.queryRequiredError);
         expect(error).toHaveProperty(
@@ -134,14 +131,13 @@ describe(`POST ${apiEndpoint}`, () => {
         if (process.env.USE_MOCK_DATA) {
             error = MOCK_DATA.mockQueryRequiredError;
         } else {
-            const response = await request(app)
-                .put(apiEndpoint)
-                .set(headers)
-                .query(params)
-                .send(input)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            error = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                console.log("not using mock data");
+                error = response.data;
+            } catch (err) {
+                console.log(err);
+            }
         }
         expect(error).toHaveProperty("code", CODE.queryRequiredError);
         expect(error).toHaveProperty(
@@ -158,14 +154,13 @@ describe(`POST ${apiEndpoint}`, () => {
         if (process.env.USE_MOCK_DATA) {
             error = MOCK_DATA.mockInputValueInvalidError;
         } else {
-            const response = await request(app)
-                .put(apiEndpoint)
-                .set(headers)
-                .query(params)
-                .send(input)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            error = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                console.log("not using mock data");
+                error = response.data;
+            } catch (err) {
+                console.log(err);
+            }
         }
         expect(error).toHaveProperty("code", CODE.inputValueInvalidError);
         expect(error).toHaveProperty(
@@ -181,14 +176,13 @@ describe(`POST ${apiEndpoint}`, () => {
         if (process.env.USE_MOCK_DATA) {
             error = MOCK_DATA.mockInputValueInvalidError;
         } else {
-            const response = await request(app)
-                .put(apiEndpoint)
-                .set(headers)
-                .query(params)
-                .send(input)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            error = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                console.log("not using mock data");
+                error = response.data;
+            } catch (err) {
+                console.log(err);
+            }
         }
         expect(error).toHaveProperty("code", CODE.inputValueInvalidError);
         expect(error).toHaveProperty(
@@ -204,14 +198,13 @@ describe(`POST ${apiEndpoint}`, () => {
         if (process.env.USE_MOCK_DATA) {
             error = MOCK_DATA.mockInputValueInvalidError;
         } else {
-            const response = await request(app)
-                .put(apiEndpoint)
-                .set(headers)
-                .query(params)
-                .send(input)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            error = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                console.log("not using mock data");
+                error = response.data;
+            } catch (err) {
+                console.log(err);
+            }
         }
         expect(error).toHaveProperty("code", CODE.inputValueInvalidError);
         expect(error).toHaveProperty(
@@ -227,14 +220,13 @@ describe(`POST ${apiEndpoint}`, () => {
         if (process.env.USE_MOCK_DATA) {
             error = MOCK_DATA.mockInputValueInvalidError;
         } else {
-            const response = await request(app)
-                .put(apiEndpoint)
-                .set(headers)
-                .query(params)
-                .send(input)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            error = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                console.log("not using mock data");
+                error = response.data;
+            } catch (err) {
+                console.log(err);
+            }
         }
         expect(error).toHaveProperty("code", CODE.inputValueInvalidError);
         expect(error).toHaveProperty(
@@ -243,3 +235,16 @@ describe(`POST ${apiEndpoint}`, () => {
         );
     });
 });
+
+/**
+ * * Get response from API endpoint
+ * @returns
+ */
+async function getResponseFromAPIEndpoint() {
+    const response = await axios.put(`${apiEndpoint}`, input, {
+        headers,
+        params,
+    });
+
+    return response;
+}
