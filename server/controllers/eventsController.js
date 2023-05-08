@@ -106,6 +106,7 @@ const eventsController = {
         }
       });
   },
+
   getEventDetail: async (req, res, next) => {
     validator.existValidate(req.query.event_id, "event_id", next);
     validator.numberValidate(req.query.event_id, "event_id", next);
@@ -123,6 +124,7 @@ const eventsController = {
 
     successHandle(res, "取得成功", event_data);
   },
+
   getMemberPrize: async (req, res, next) => {
     validator.existValidate(req.query.member_id, "member_id", next);
     validator.numberValidate(req.query.member_id, "member_id", next);
@@ -139,6 +141,7 @@ const eventsController = {
 
     successHandle(res, "取得成功", prize_data);
   },
+
   updateInventory: async (req, res, next) => {
     validator.existValidate(req.params.discount_id, "discount_id", next);
     validator.existValidate(req.body.increase, "increase", next);
@@ -157,6 +160,7 @@ const eventsController = {
       inventory: result.inventory,
     });
   },
+
   updateInfo: async (req, res, next) => {
     const lottery_id = req.params.lottery_id;
     const is_receive = req.body.is_receive;
@@ -184,6 +188,7 @@ const eventsController = {
       });
     }
   },
+
   createInfo: async (req, res, next) => {
     const { member_id, discount_id } = req.body;
     validator.existValidate(member_id, "member_id", next);
