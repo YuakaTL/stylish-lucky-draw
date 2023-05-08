@@ -4,9 +4,12 @@ import handleErrorAsync from "../utils/handleErrorAsync.js";
 import eventsController from "../controllers/eventsController.js";
 import isAuth from "../middleware/isAuth.js";
 
-const { getEventDetail, createInfo } = eventsController;
+const { getEventDetail, updateInventory, createInfo, updateInfo, getMemberPrize } = eventsController;
 
 router.get("/event", isAuth, handleErrorAsync(getEventDetail));
+router.put("/inventory/:discount_id", isAuth, handleErrorAsync(updateInventory));
 router.post("/info", isAuth, handleErrorAsync(createInfo));
+router.get("/member", isAuth, handleErrorAsync(getMemberPrize))
+router.put("/receive/:lottery_id", isAuth, handleErrorAsync(updateInfo));
 
 export default router;

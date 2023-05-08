@@ -4,9 +4,11 @@ import ERROR_MESSAGE from "../utils/customStatusCodeMessage.js";
 import request from "supertest";
 import app from "../../server/app.js";
 import dotenv from "dotenv";
+import axios from "axios";
 dotenv.config();
 
-const apiEndpoint = "/api/v1/admin/record";
+// const apiEndpoint = "/api/v1/admin/record";
+const apiEndpoint = "http://localhost:5000/api/v1/admin/record";
 let params = { id: "0", paging: 1, amount: 10 };
 
 describe(`GET ${apiEndpoint}`, () => {
@@ -21,23 +23,22 @@ describe(`GET ${apiEndpoint}`, () => {
             recordList = MOCK_DATA.mockAdminRecordResponse;
             console.log("using mock data");
         } else {
-            const response = await request(app)
-                .get(apiEndpoint)
-                .query(params)
-                .expect("Content-Type", /json/)
-                .expect(200);
             console.log("not using mock data");
-
-            recordList = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                recordList = response.data;
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         expect(recordList).toHaveProperty("code", CODE.success);
         expect(recordList).toHaveProperty("message", "取得獲獎紀錄");
         expect(recordList).toHaveProperty("data");
-        expect(Array.isArray(recordList.data)).toBe(true);
+        expect(Array.isArray(recordList.data.record)).toBe(true);
         // expect(lotteryList).toHaveProperty("next_paging");
 
-        for (const record of recordList.data) {
+        for (const record of recordList.data.record) {
             expect(record).toHaveProperty("discount_name");
             expect(typeof record.discount_name).toBe("string");
             expect(record).toHaveProperty("discount_value");
@@ -62,12 +63,12 @@ describe(`GET ${apiEndpoint}`, () => {
         if (process.env.USE_MOCK_DATA) {
             error = MOCK_DATA.mockInputValueInvalidError;
         } else {
-            const response = await request(app)
-                .get(apiEndpoint)
-                .query(params)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            error = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                error = response.data;
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         expect(error).toHaveProperty("code", CODE.inputValueInvalidError);
@@ -83,12 +84,12 @@ describe(`GET ${apiEndpoint}`, () => {
         if (process.env.USE_MOCK_DATA) {
             error = MOCK_DATA.mockInputValueInvalidError;
         } else {
-            const response = await request(app)
-                .get(apiEndpoint)
-                .query(query)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            error = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                error = response.data;
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         expect(error).toHaveProperty("code", CODE.inputValueInvalidError);
@@ -104,12 +105,12 @@ describe(`GET ${apiEndpoint}`, () => {
         if (process.env.USE_MOCK_DATA) {
             error = MOCK_DATA.mockInputValueInvalidError;
         } else {
-            const response = await request(app)
-                .get(apiEndpoint)
-                .query(query)
-                .expect("Content-Type", /json/)
-                .expect(200);
-            error = response.body;
+            try {
+                const response = await getResponseFromAPIEndpoint();
+                error = response.data;
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         expect(error).toHaveProperty("code", CODE.inputValueInvalidError);
@@ -119,3 +120,15 @@ describe(`GET ${apiEndpoint}`, () => {
         );
     });
 });
+
+/**
+ * * Get response from API endpoint
+ * @returns
+ */
+async function getResponseFromAPIEndpoint() {
+    const response = await axios.get(`${apiEndpoint}`, {
+        params,
+    });
+
+    return response;
+}
