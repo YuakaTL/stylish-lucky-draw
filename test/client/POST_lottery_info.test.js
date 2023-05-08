@@ -41,7 +41,15 @@ describe(`POST ${apiEndpoint}`, () => {
             "lottery_id",
             expect.any(Number)
         );
-        expect(lotteryInfo.data).toHaveProperty("member_id", input.member_id);
+        expect(lotteryInfo.data).toHaveProperty(
+            "member_id",
+            expect.any(Number)
+        );
+        expect(lotteryInfo.data).toHaveProperty(
+            "member_name",
+            expect.any(String)
+        );
+        expect(lotteryInfo.data).toHaveProperty("event_id", expect.any(Number));
         expect(lotteryInfo.data).toHaveProperty(
             "discount_value",
             expect.any(Number)

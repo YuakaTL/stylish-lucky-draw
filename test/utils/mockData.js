@@ -130,6 +130,7 @@ export const mockLotteryInfoResponse = {
     data: {
         lottery_id: 1,
         member_id: 1,
+        member_name: "John Smith",
         event_id: 1,
         discount_value: 0.9,
         coupon: "AbCd123456",
