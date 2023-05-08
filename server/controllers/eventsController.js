@@ -63,7 +63,7 @@ const eventsController = {
                 .put(
                   `http://localhost:5000/api/v1/lottery/inventory/${discount.discount_id}`,
                   {
-                    increase: false, //這邊過不了booleanValidate，但設成true可以
+                    increase: false /*這邊過不了booleanValidate，但設成true可以*/,
                   },
                   {
                     headers: {
@@ -74,6 +74,7 @@ const eventsController = {
                 .then((response) => {
                   console.log(response.data);
                 });
+
               // response 為抽到的獎項
             });
         }
