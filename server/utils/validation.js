@@ -21,7 +21,7 @@ const Validator = {
 
   // 001 未帶必要欄位
   existValidate: (param, text, next) => {
-    if (!param) {
+    if (param === undefined || param === null) {
       throw next(appError(200, `未帶必要欄位`, "001", next));
     }
   },
@@ -67,8 +67,15 @@ const Validator = {
     }
   },
 
+  // 檢查本來就是布林值或是字串要為 true/false
   booleanValidate: (param, text, next) => {
-    if (typeof param !== "boolean") {
+    if (
+      !(
+        typeof param === "boolean" ||
+        (typeof param === "string" &&
+          (param.toLowerCase() === "true" || param.toLowerCase() === "false"))
+      )
+    ) {
       throw next(appError(200, `輸入值不符合規定`, "100", next));
     }
   },
