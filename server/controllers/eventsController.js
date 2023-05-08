@@ -147,9 +147,13 @@ const eventsController = {
     validator.existValidate(req.body.increase, "increase", next);
     validator.booleanValidate(req.body.increase, "increase", next);
 
+    // handle boolean whether input is boolean or string
+    const increase_bool =
+      req.body.increase === "true" || req.body.increase === true;
+
     const result = await eventsModel.updateInventory(
       req.params.discount_id,
-      req.body.increase,
+      increase_bool,
       next
     );
 
