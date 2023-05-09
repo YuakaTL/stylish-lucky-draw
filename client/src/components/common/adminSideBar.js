@@ -36,7 +36,7 @@ export default function AdminSideBar({ isMenuOpen, setIsMenuOpen }) {
 
   return (
     <div
-      className={`${menuClass} fixed bottom-0 top-[66px] h-full w-64 overflow-hidden shadow`}
+      className={`${menuClass} fixed bottom-0 top-[66px] h-full w-64 overflow-hidden shadow z-20 bg-white`}
     >
       <h1
         className={`${playfairDisplay.className} mt-6 pl-8 text-[28px] font-bold`}
