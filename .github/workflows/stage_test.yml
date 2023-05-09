@@ -44,7 +44,7 @@ jobs:
       run: | 
         ls -la
     - name: Install K6
-      uses: k6io/action-setup@v1
+      uses: k6io/action@v2
 
     - name: Run K6 Test 1 (healthcheck_10)
       run: k6 run load_testing_backend_healthcheck/load_testing_10.js
