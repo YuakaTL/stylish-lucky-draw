@@ -112,7 +112,7 @@ const adminController = {
       update_at: result.last_update_time,
     };
 
-    successHandle(res, "更新成功", lottery_data);
+    successHandle(res, "新增成功", lottery_data);
   },
 
   getRecord: async (req, res, next) => {
