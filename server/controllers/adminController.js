@@ -127,7 +127,7 @@ const adminController = {
     validator.tenMinutesValidate(event_start_time, next);
 
     // turn string into boolean
-    const is_visible_bool = is_visible === "true";
+    const is_visible_bool = is_visible === "true" || is_visible === true;
 
     // handle excel data
     validator.existValidate(req.file, "req.file", next);
