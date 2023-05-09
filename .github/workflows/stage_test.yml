@@ -2,7 +2,7 @@ name: STAGE_TEST
 
 on:
   push: 
-    branches: ["Main","feature/SLD-33"]
+    branches: ["Main"]
   workflow_dispatch:
 
 jobs:
