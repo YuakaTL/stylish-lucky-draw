@@ -1,41 +1,140 @@
 import { useState, useEffect } from "react";
-import qs from 'qs';
-import { Table } from "antd";
+import { Table, Tag } from "antd";
+import { EditOutlined, DeleteTwoTone } from "@ant-design/icons";
+import dayjs from "dayjs";
+import axios from "axios";
 import CustomButton from "@/components/button";
+
+const convertStatus = {
+  pending: "尚未開始",
+  ongoing: "進行中",
+  cancelled: "已取消",
+  finished: "已結束",
+};
+
+const convertStatusColor = {
+  pending: "orange",
+  ongoing: "green",
+  cancelled: "red",
+  finished: "red",
+};
+
+const editEvent = (data) => () => {
+  console.log("editEvent", data);
+};
+
+const deleteEvent = (id) => async () => {
+  let result = await axios.put(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/lottery/${id}`,
+    {
+      status: "cancelled",
+    }
+  );
+};
+
 const columns = [
   {
-    title: "Name",
-    dataIndex: "name",
-    sorter: true,
-    render: (name) => `${name.first} ${name.last}`,
-    width: "20%",
+    title: "活動序號",
+    dataIndex: "event_id",
+    width: "10%",
+    sorter: {
+      compare: (a, b) => a.event_id - b.event_id,
+    },
+    sortDirections: ["descend"],
   },
   {
-    title: "Gender",
-    dataIndex: "gender",
+    title: "活動名稱",
+    dataIndex: "event_name",
+    width: "15%",
+  },
+  {
+    title: "活動開始時間",
+    dataIndex: "event_start_time",
+    sorter: true,
+    width: "15%",
+    render: (event_start_time) => (
+      <>{dayjs(event_start_time).format("YYYY-MM-DD HH:mm:ss")}</>
+    ),
+    sorter: {
+      compare: (a, b) =>
+        dayjs(a.event_end_time).unix() - dayjs(b.event_end_time).unix(),
+    },
+  },
+  {
+    title: "活動結束時間",
+    dataIndex: "event_end_time",
+    sorter: true,
+    width: "15%",
+    render: (event_end_time) => (
+      <>{dayjs(event_end_time).format("YYYY-MM-DD HH:mm:ss")}</>
+    ),
+    sorter: {
+      compare: (a, b) =>
+        dayjs(a.event_end_time).unix() - dayjs(b.event_end_time).unix(),
+    },
+  },
+  {
+    title: "狀態",
+    dataIndex: "status",
+    width: "15%",
+    render: (status, data) => (
+      <>
+        {data.is_visible ? (
+          <Tag color={convertStatusColor[status]} key={status}>
+            {convertStatus[status]}
+          </Tag>
+        ) : (
+          <Tag color={"red"} key={status}>
+            已隱藏
+          </Tag>
+        )}
+      </>
+    ),
     filters: [
       {
-        text: "Male",
-        value: "male",
+        text: "尚未開始",
+        value: "pending",
       },
       {
-        text: "Female",
-        value: "female",
+        text: "進行中",
+        value: "ongoing",
+      },
+      {
+        text: "已取消",
+        value: "cancelled",
+      },
+      {
+        text: "已結束",
+        value: "finished",
       },
     ],
-    width: "20%",
+    onFilter: (value, record) => record.status.indexOf(value) === 0,
   },
   {
-    title: "Email",
-    dataIndex: "email",
+    title: "獎品剩餘庫存",
+    dataIndex: "total_inventory",
+    width: "15%",
+  },
+  {
+    title: "功能",
+    dataIndex: "event_id",
+    align: "center",
+    width: "10%",
+    render: (id, data) => (
+      <div className="flex justify-around">
+        <EditOutlined
+          className="cursor-pointer text-xl"
+          onClick={editEvent(data)}
+        />
+        <DeleteTwoTone
+          twoToneColor="#A30D11"
+          className="cursor-pointer text-xl"
+          onClick={deleteEvent(id)}
+        />
+      </div>
+    ),
   },
 ];
-
-const getRandomuserParams = (params) => ({
-  results: params.pagination?.pageSize,
-  page: params.pagination?.current,
-  ...params,
-});
 
 export default function Event() {
   const [data, setData] = useState();
@@ -60,14 +159,16 @@ export default function Event() {
 
   const fetchData = () => {
     setLoading(true);
-    fetch(
-      `https://randomuser.me/api?${qs.stringify(
-        getRandomuserParams(tableParams)
-      )}`
-    )
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/lottery`)
       .then((res) => res.json())
-      .then(({ results }) => {
-        setData(results);
+      .then((results) => {
+        let data = [];
+        results.data.lottery.forEach((item) => {
+          if (item.status !== "cancelled") {
+            return data.push(item);
+          }
+        });
+        setData(data);
         setLoading(false);
         setTableParams({
           ...tableParams,
@@ -82,9 +183,7 @@ export default function Event() {
               }
               return originalElement;
             },
-            total: 200,
-            // 200 is mock data, you should read it from server
-            // total: data.totalCount,
+            total: results.data.length,
           },
         });
       });
@@ -118,16 +217,18 @@ export default function Event() {
       </h2>
       <CustomButton
         text="+ 新活動"
-        className="w-28 bg-black text-white"
+        className="w-28 bg-black text-white ml-auto"
         onClick={showCreateEventModal}
       />
       <Table
         columns={columns}
-        rowKey={(record) => record.login.uuid}
+        rowKey={(record) => record.event_id}
         dataSource={data}
         pagination={tableParams.pagination}
         loading={loading}
         onChange={handleTableChange}
+        responsive={true}
+        className="overflow-y-auto"
       />
     </div>
   );

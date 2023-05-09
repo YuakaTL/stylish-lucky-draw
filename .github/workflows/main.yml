@@ -38,3 +38,43 @@ jobs:
           cd docker
           docker-compose build --no-cache
           docker-compose up -d
+
+  SIT-test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+
+    - name: Checkout main project
+      uses: actions/checkout@v2
+    
+    - name: install OpenVPN package
+      run: |
+        sudo apt update
+        sudo apt install -y openvpn openvpn-systemd-resolved
+      
+    - name: Connect openVPN
+      uses: "kota65535/github-openvpn-connect-action@v2"
+      with:
+        config_file: ./.github/workflows/appworks-internal-dns.ovpn
+        username: ${{ secrets.OVPN_USERNAME }}
+        password: ${{ secrets.OVPN_PASSWORD }}
+
+
+    - name: Checkout test code
+      uses: actions/checkout@v2
+      with:
+        repository: VictorChao996/SIT-API-test
+        ref: main
+
+    - name: Check the SIT environment backend API
+      run: curl http://192.168.50.104:3000/api/v1/healthcheck
+
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Show VM file structure
+      run: | 
+        ls -la
+
+    - name: Run tests
+      run: yarn test
