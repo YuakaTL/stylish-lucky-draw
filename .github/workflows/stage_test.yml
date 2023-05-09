@@ -1,0 +1,79 @@
+name: STAGE_TEST
+
+on:
+  push: 
+    branches: ["Main"]
+  workflow_dispatch:
+
+jobs:
+
+  STAGE-test:
+    runs-on: ubuntu-latest
+    # needs: build
+    steps:
+
+    - name: Checkout main project
+      uses: actions/checkout@v2
+    
+    - name: install OpenVPN package
+      run: |
+        sudo apt update
+        sudo apt install -y openvpn openvpn-systemd-resolved
+      
+    - name: Connect openVPN
+      uses: "kota65535/github-openvpn-connect-action@v2"
+      with:
+        config_file: ./.github/workflows/appworks-internal-dns.ovpn
+        username: ${{ secrets.OVPN_USERNAME }}
+        password: ${{ secrets.OVPN_PASSWORD }}
+
+
+    - name: Checkout load testing code
+      uses: actions/checkout@v2
+      with:
+        repository: VictorChao996/K6-load-testing
+        ref: main
+
+    - name: Check the STAGE environment backend API
+      run: curl http://192.168.50.104/api/v1/healthcheck
+
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Show VM file structure
+      run: | 
+        ls -la
+      
+      # - name: Install K6
+      #   uses: k6io/action@v2
+      
+    - name: Run K6 Test 1 (healthcheck_10)
+      uses: grafana/k6-action@v0.3.0
+      with:
+        script: ./load_testing_backend_healthcheck/load_testing_10.js
+    
+    - name: Run K6 Test 2 (healthcheck_50)
+      uses: grafana/k6-action@v0.3.0
+      with:
+        script: ./load_testing_backend_healthcheck/load_testing_50.js
+
+    - name: Run K6 Test 3 (healthcheck_100)
+      uses: grafana/k6-action@v0.3.0
+      with:
+        script: ./load_testing_backend_healthcheck/load_testing_100.js
+
+    - name: Run K6 Test 4 (healthcheck_800)
+      uses: grafana/k6-action@v0.3.0
+      with:
+        script: ./load_testing_backend_healthcheck/load_testing_800.js
+
+    - name: Run K6 Test 5 (frontend 800)
+      uses: grafana/k6-action@v0.3.0
+      with:
+        script: ./load_testing_frontend/load_testing_800_frontend.js
+
+    - name: Run K6 Test 6 (backend_lotteryDraw)
+      uses: grafana/k6-action@v0.3.0
+      with:
+        script: ./load_testing_backend_lotteryDraw/load_testing_lotteryDraw_SIT.js
+    
