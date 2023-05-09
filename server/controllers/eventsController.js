@@ -13,6 +13,14 @@ const agent = new https.Agent({
 const getRandom = (x) => {
   return Math.floor(Math.random() * x);
 };
+// get min threhold from discount list
+const getMinThreshold = (discountList) => {
+  let minThreshold = discountList[0].threshold;
+  discountList.forEach((discount) => {
+    if (discount.threshold < minThreshold) minThreshold = discount.threshold;
+  });
+  return minThreshold;
+};
 
 const eventsController = {
   startDraw: async (req, res, next) => {
@@ -20,7 +28,6 @@ const eventsController = {
     const TOKEN = req.headers.authorization;
     validator.existValidate(member_id, "member_id", next);
     validator.existValidate(event_id, "event_id", next);
-
     axios
       .get(
         `http://member-api.appworks.local/api/v1/admin/members/${member_id}`,
@@ -34,74 +41,97 @@ const eventsController = {
           throw next(appError(200, `使用者註冊未滿三個月`, "102", next));
         else {
           // 拿取會員近一個月消費金額
-          // timestamp of one month age
-          const oneMonthAgo = new Date().getTime() - 30 * 24 * 60 * 60 * 1000;
-
-          // get order before one month
-          const ordersInOneMonth = response.data.data.items.filter(
-            (order) => new Date(order.order_at).getTime() >= oneMonthAgo
-          );
-
-          // sum refund amount
-          const totalRefundAmount = ordersInOneMonth.reduce((sum, order) => {
-            const refundAmount = order.refunds.reduce(
-              (refundSum, refund) => refundSum + refund.refund_amount,
-              0
-            );
-            return sum + refundAmount;
-          }, 0);
-
-          // sum order amount
-          const totalAmount = ordersInOneMonth.reduce(
-            (sum, order) => sum + order.order_amount,
-            0
-          );
-
-          console.log(
-            `近一個月內的金額總和為 ${totalAmount - totalRefundAmount} 元。`
-          );
-
-          // 用GET /event 拿取獎品列表，使用最低threshold檢查是否符合抽獎資格，若庫存為0也回傳不能抽獎
           axios
-            .get(
-              `http://localhost:5000/api/v1/lottery/event?event_id=${event_id}`,
-              {
-                httpsAgent: agent,
-                headers: {
-                  Authorization: `${TOKEN}`,
-                },
-              }
-            )
+            .get(`http://order-api.appworks.local/api/v1/admin/orders`, {
+              httpsAgent: agent,
+              params: { member_id: member_id },
+            })
             .then(async (response) => {
-              const discount_list = response.data.data;
-              var discount = null;
-              let discount_inventory = 0;
-              // 抽獎 -> 檢查是否符合獎品資格（剩餘數量、threshold）-> 一直抽直到符合資格
-              while (discount_inventory == 0 /* OR 不符合 threshold 資格 */) {
-                discount = discount_list[getRandom(discount_list.length)];
-
-                discount_inventory = discount.inventory;
-                // discount_threshold = discount.threshold
-              }
-              // 用 PUT /inventory 將庫存-1
-              console.log(discount.discount_id);
+              // timestamp of one month age
+              const oneMonthAgo =
+                new Date().getTime() - 30 * 24 * 60 * 60 * 1000;
+              // get order before one month
+              const ordersInOneMonth = response.data.data.items.filter(
+                (order) => new Date(order.order_at).getTime() >= oneMonthAgo
+              );
+              // sum refund amount
+              const totalRefundAmount = ordersInOneMonth.reduce(
+                (sum, order) => {
+                  const refundAmount = order.refunds.reduce(
+                    (refundSum, refund) => refundSum + refund.refund_amount,
+                    0
+                  );
+                  return sum + refundAmount;
+                },
+                0
+              );
+              // sum order amount
+              const totalAmount = ordersInOneMonth.reduce(
+                (sum, order) => sum + order.order_amount,
+                0
+              );
+              console.log(
+                `近一個月內的金額總和為 ${totalAmount - totalRefundAmount} 元。`
+              );
+              const memberAmount = totalAmount - totalRefundAmount;
+              // 用GET /event 拿取獎品列表，使用最低 threshold 檢查是否符合抽獎資格，若庫存為 0 也回傳不能抽獎
               axios
-                .put(
-                  `http://localhost:5000/api/v1/lottery/inventory/${discount.discount_id}`,
-                  {
-                    increase: false /*這邊過不了booleanValidate，但設成true可以*/,
+                .get(`http://localhost:5000/api/v1/lottery/event`, {
+                  httpsAgent: agent,
+                  headers: {
+                    Authorization: `${TOKEN}`,
                   },
-                  {
-                    headers: {
-                      Authorization: `${TOKEN}`,
-                    },
-                  }
-                )
-                .then((response) => {
-                  console.log(response.data);
-                });
+                  params: {
+                    event_id: event_id,
+                  },
+                })
+                .then(async (response) => {
+                  const discount_list = response.data.data;
+                  if (discount_list.length == 0)
+                    throw next(appError(200, `獎品列表為空`, "102", next));
+                  const minThreshold = getMinThreshold(discount_list);
+                  if (memberAmount < minThreshold)
+                    throw next(
+                      appError(200, `消費金額未達最低門檻`, "102", next)
+                    );
+                  // 抽獎 -> 檢查是否符合獎品資格（剩餘數量、threshold）-> 一直抽直到符合資格
+                  var discount = null;
+                  let discount_inventory = 0;
+                  while (
+                    discount_inventory == 0 || // 庫存為0
+                    discount.threshold > memberAmount // 消費金額不符合
+                  ) {
+                    discount = discount_list[getRandom(discount_list.length)];
 
-              // response 為抽到的獎項
+                    discount_inventory = discount.inventory;
+                    // discount_threshold = discount.threshold
+                  }
+                  // 用 PUT /inventory 將庫存-1
+                  console.log(discount);
+                  console.log(discount.discount_id);
+                  axios
+                    .put(
+                      `http://localhost:5000/api/v1/lottery/inventory/${discount.discount_id}`,
+                      {
+                        increase: false /*這邊過不了booleanValidate，但設成true可以*/,
+                      },
+                      {
+                        headers: {
+                          Authorization: `${TOKEN}`,
+                        },
+                      }
+                    )
+                    .then((response) => {
+                      console.log(response.data);
+                      discount = response.data.data;
+                      // response 為抽到的獎項
+                      successHandle(res, "抽獎成功", discount);
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                      throw next(appError(200, `抽獎失敗`, "102", next));
+                    });
+                });
             });
         }
       });
