@@ -34,7 +34,7 @@ jobs:
         repository: VictorChao996/K6-load-testing
         ref: main
 
-    - name: Check the SIT environment backend API
+    - name: Check the STAGE environment backend API
       run: curl http://192.168.50.104/api/v1/healthcheck
 
     - name: Install dependencies
