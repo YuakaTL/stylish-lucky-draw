@@ -6,17 +6,42 @@
   border-radius: 50px 4px !important;
 }
 
-.ant-pagination-item{
+.ant-pagination-item {
   border: none !important;
-  background-color: #E0E0E0 !important;
+  background-color: #e0e0e0 !important;
 }
 .ant-pagination-item a {
   color: #000 !important;
 }
 .ant-pagination-item-active {
   border: none !important;
-  background-color: #1E1E1E !important;
+  background-color: #1e1e1e !important;
 }
 .ant-pagination-item-active a {
   color: #fff !important;
+}
+
+.ant-switch-checked {
+  background-color: #000000 !important;
+}
+
+.ant-switch:not(.ant-switch-checked) {
+  background-color: #d9d9d9;
+}
+
+.ant-btn-primary {
+  background-color: #000000;
+  border-color: #000000;
+}
+
+.ant-btn-primary:hover {
+  opacity: 0.5;
+}
+
+.ant-picker-cell-selected .ant-picker-cell-inner,
+.ant-picker-cell-range-end .ant-picker-cell-inner {
+  background-color: #000000 !important;
+}
+.ant-picker-cell-range-start .ant-picker-cell-inner {
+  background-color: #000000 !important;
 }

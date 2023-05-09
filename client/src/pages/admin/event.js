@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Table, Tag } from "antd";
 import { EditOutlined, DeleteTwoTone } from "@ant-design/icons";
@@ -205,21 +206,19 @@ export default function Event() {
     }
   };
 
-  const showCreateEventModal = () => {
-    console.log("showCreateEventModal");
-  };
-
   return (
     <div className="ml-[34px] mt-[30px] pr-[34px]">
       <p className="text-sm">StyLish 後台 {">"} 活動管理</p>
       <h2 className="mb-6 mt-6 border-b border-[#AAAAAA] pb-[6px] text-xl">
         活動管理
       </h2>
-      <CustomButton
-        text="+ 新活動"
-        className="w-28 bg-black text-white ml-auto"
-        onClick={showCreateEventModal}
-      />
+      <Link href={"event-creation"} className="inline-block float-right mb-4">
+        <CustomButton
+          text="+ 新活動"
+          className=" w-28 bg-black text-white"
+        />
+      </Link>
+
       <Table
         columns={columns}
         rowKey={(record) => record.event_id}
