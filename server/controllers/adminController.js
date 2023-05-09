@@ -47,7 +47,7 @@ const adminController = {
       update_at: result.last_update_time,
     };
 
-    successHandle(res, "更新成功", lottery_data);
+    successHandle(res, "新增成功", lottery_data);
   },
   updateLottery: async (req, res, next) => {
     const { event_name, event_start_time, event_end_time, is_visible, status } =
