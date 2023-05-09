@@ -123,7 +123,7 @@ export default function EventCreation() {
           });
         }
         form.resetFields();
-        setLoginOpen(false);
+        setTableData([]);
       })
       .catch((e) => {
         messageApi.open({
