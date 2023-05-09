@@ -33,7 +33,7 @@ const adminController = {
       is_visible,
       next
     );
-
+    console.log(result);
     // return
     const lottery_data = {
       event_id: result.event_id,

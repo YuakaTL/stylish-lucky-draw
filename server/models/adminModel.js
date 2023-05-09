@@ -125,6 +125,19 @@ const adminModel = {
         },
       });
 
+      // insert data into discount table
+      for (let i = 0; i < event_data.length; i++) {
+        await tx.discount.create({
+          data: {
+            discount_name: event_data[i].discount_name,
+            discount_value: event_data[i].discount_value,
+            event_id: event.event_id,
+            threshold: event_data[i].threshold,
+            inventory: event_data[i].inventory,
+          },
+        });
+      }
+
       // return
       result = {
         event_id: event.event_id,
