@@ -5,6 +5,7 @@ import axios from "axios";
 import appError from "../utils/appError.js";
 import successHandle from "../utils/successHandle.js";
 import validator from "../utils/validation.js";
+import dayjs from "dayjs";
 
 const agent = new https.Agent({
   rejectUnauthorized: false,
@@ -26,8 +27,11 @@ const eventsController = {
   startDraw: async (req, res, next) => {
     const { member_id, event_id } = req.body;
     const TOKEN = req.headers.authorization;
+    const API_DEV = process.env.API_DEV;
+
     validator.existValidate(member_id, "member_id", next);
     validator.existValidate(event_id, "event_id", next);
+
     axios
       .get(
         `http://member-api.appworks.local/api/v1/admin/members/${member_id}`,
@@ -35,11 +39,12 @@ const eventsController = {
       )
       .then(async (response) => {
         // 檢查是否加入三個月
-        const register_at = new Date(response.data.data.register_at);
-        const now = new Date();
-        if (now.getTime() - register_at.getTime() > 1000 * 60 * 60 * 24 * 90)
+        const now = dayjs();
+        const registerAt = dayjs(response.data.data.register_at);
+
+        if (now.diff(registerAt, "month") < 3) {
           throw next(appError(200, `使用者註冊未滿三個月`, "102", next));
-        else {
+        } else {
           // 拿取會員近一個月消費金額
           axios
             .get(`http://order-api.appworks.local/api/v1/admin/orders`, {
@@ -48,12 +53,13 @@ const eventsController = {
             })
             .then(async (response) => {
               // timestamp of one month age
-              const oneMonthAgo =
-                new Date().getTime() - 30 * 24 * 60 * 60 * 1000;
+              const oneMonthAgo = dayjs().subtract(1, "month").valueOf();
+
               // get order before one month
               const ordersInOneMonth = response.data.data.items.filter(
                 (order) => new Date(order.order_at).getTime() >= oneMonthAgo
               );
+
               // sum refund amount
               const totalRefundAmount = ordersInOneMonth.reduce(
                 (sum, order) => {
@@ -76,7 +82,7 @@ const eventsController = {
               const memberAmount = totalAmount - totalRefundAmount;
               // 用GET /event 拿取獎品列表，使用最低 threshold 檢查是否符合抽獎資格，若庫存為 0 也回傳不能抽獎
               axios
-                .get(`http://localhost:5000/api/v1/lottery/event`, {
+                .get(`${API_DEV}/api/v1/lottery/event`, {
                   httpsAgent: agent,
                   headers: {
                     Authorization: `${TOKEN}`,
@@ -111,9 +117,9 @@ const eventsController = {
                   console.log(discount.discount_id);
                   axios
                     .put(
-                      `http://localhost:5000/api/v1/lottery/inventory/${discount.discount_id}`,
+                      `${API_DEV}/api/v1/lottery/inventory/${discount.discount_id}`,
                       {
-                        increase: false /*這邊過不了booleanValidate，但設成true可以*/,
+                        increase: false,
                       },
                       {
                         headers: {
@@ -134,6 +140,9 @@ const eventsController = {
                 });
             });
         }
+      })
+      .catch((err) => {
+        console.log(err);
       });
   },
 
