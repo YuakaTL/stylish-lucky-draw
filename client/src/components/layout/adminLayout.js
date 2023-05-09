@@ -8,8 +8,8 @@ export default function AdminLayout({ children }) {
   return (
     <>
       <AdminHeader isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
-      <AdminSideBar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
-      <div className="ml-64">{children}</div>
+      <AdminSideBar isMenuOpen={isMenuOpen} />
+      <div className={`${isMenuOpen ? "ml-0" : "ml-64"} transition-all duration-500 ease-in-out`}>{children}</div>
     </>
   );
 }
