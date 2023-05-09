@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Table, Input } from "antd";
 
 const { Search } = Input;
@@ -60,52 +60,124 @@ const columns = [
 ];
 
 export default function Record() {
-  const prizeData = [
-    {
-      key: "1",
-      獎品序號: 1,
-      折價券名稱: "夏日9折券",
-      折扣: 0.9,
-      會員ID: "M800002",
-      會員名稱: "可愛的貓貓",
-      活動ID: 1,
-      兌換號碼: "Nym2eK3q",
-      獲得時間: "2023-04-01 00:00:00",
-    },
-    {
-      key: "2",
-      獎品序號: 1,
-      折價券名稱: "全站8折券",
-      折扣: 0.8,
-      會員ID: "M800012",
-      會員名稱: "可愛的狗狗",
-      活動ID: 1,
-      兌換號碼: "Nym2eK3q",
-      獲得時間: "2023-04-01 00:00:00",
-    },
-    {
-      key: "3",
-      獎品序號: 1,
-      折價券名稱: "爆殺5折券",
-      折扣: 0.5,
-      會員ID: "M800004",
-      會員名稱: "不可愛的貓貓",
-      活動ID: 2,
-      兌換號碼: "Nym2eK3q",
-      獲得時間: "2023-04-01 00:00:00",
-    },
-  ];
-  const [data, setData] = useState(prizeData);
+  const [data, setData] = useState();
+  const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [tableParams, setTableParams] = useState({
+    pagination: {
+      current: 1,
+      pageSize: 10,
+      defaultPageSize: 10,
+      pageSizeOptions: [10, 50],
+      position: ["bottomCenter"],
+      itemRender: (_, type, originalElement) => {
+        if (type === "prev") {
+          return <a>Previous</a>;
+        }
+        if (type === "next") {
+          return <a>Next</a>;
+        }
+        return originalElement;
+      },
+    },
+  });
 
-  const handleSearch = (value) => {
+  const fetchData = () => {
+    setLoading(true);
+    fetch(`http://192.168.50.104:3000/api/v1/admin/record?amount=999`)
+      .then((res) => res.json())
+      .then((results) => {
+        let recordData = [];
+        for (let i = 0; i < results.data.length; i++) {
+          let row = {
+            獎品序號: 1,
+            折價券名稱: results.data[i].discount_name,
+            折扣: results.data[i].discount_value,
+            會員ID: results.data[i].member_id,
+            會員名稱: results.data[i].member_name,
+            活動ID: results.data[i].event_id,
+            兌換號碼: results.data[i].coupon,
+            獲得時間: results.data[i].get_coupon_time,
+          };
+
+          recordData.push(row);
+        }
+        setData(recordData);
+        setLoading(false);
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            itemRender: (_, type, originalElement) => {
+              if (type === "prev") {
+                return <a>Previous</a>;
+              }
+              if (type === "next") {
+                return <a>Next</a>;
+              }
+              return originalElement;
+            },
+          },
+        });
+      });
+  };
+
+  const originalData = async () => {
+    try {
+      const res = await fetch(
+        `http://192.168.50.104:3000/api/v1/admin/record?amount=999`
+      );
+      const results = await res.json();
+
+      let recordData = [];
+      for (let i = 0; i < results.data.length; i++) {
+        let row = {
+          獎品序號: 1,
+          折價券名稱: results.data[i].discount_name,
+          折扣: results.data[i].discount_value,
+          會員ID: results.data[i].member_id,
+          會員名稱: results.data[i].member_name,
+          活動ID: results.data[i].event_id,
+          兌換號碼: results.data[i].coupon,
+          獲得時間: results.data[i].get_coupon_time,
+        };
+
+        recordData.push(row);
+      }
+      return recordData;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [JSON.stringify(tableParams)]);
+
+  const handleTableChange = (pagination, filters) => {
+    setTableParams({
+      pagination,
+      filters,
+    });
+    // `dataSource` is useless since `pageSize` changed
+    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+      setData([]);
+    }
+  };
+
+  const handleSearch = async (value) => {
+    const recordData = await originalData();
     if (value === "") {
-      setData(prizeData);
+      setData(recordData);
     } else {
       setSearchValue(value);
-      const filteredData = prizeData.filter((item) =>
-        item.會員ID.includes(value)
-      );
+      let filteredData = [];
+      for (let i = 0; i < recordData.length; i++) {
+        if (recordData[i].會員ID === parseInt(value)) {
+          filteredData.push(recordData[i]);
+        }
+      }
+
       setData(filteredData);
     }
   };
@@ -128,7 +200,10 @@ export default function Record() {
       />
       <Table
         className="mt-4"
-        pagination={{ position: ["bottomCenter"] }}
+        pagination={tableParams.pagination}
+        loading={loading}
+        onChange={handleTableChange}
+        responsive={true}
         columns={columns}
         dataSource={data}
       />
