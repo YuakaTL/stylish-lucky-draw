@@ -109,7 +109,7 @@ export default function EventCreation() {
 
     setConfirmLoading(true);
     axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/lottery`, data)
+      .post(`http://192.168.50.104:3000/api/v1/admin/lottery`, data)
       .then((result) => {
         if(result.data.code==="000"){
           messageApi.open({
