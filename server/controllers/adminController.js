@@ -160,7 +160,8 @@ const adminController = {
 
     const result = await adminModel.getLottery(page, pageSize);
 
-    const lottery = result.map((item) => ({
+    const lottery = result.map((item) => {
+      return {
       event_id: item.event_id,
       event_name: item.event_name,
       event_start_time: item.start_time,
@@ -169,9 +170,9 @@ const adminController = {
       status: item.status,
       total_inventory: item.Discount.map(
         (discount) => discount.inventory
-      ).reduce((a, b) => a + b),
-    }));
-
+        ).reduce((a, b) => a + b, 0),
+      };
+    });
     if (result.length > pageSize && pageSize < 999) {
       const data = {
         lottery: lottery.slice(0, pageSize),
@@ -184,6 +185,13 @@ const adminController = {
       };
       successHandle(res, "取得成功", data);
     }
+  },
+  deleteLottery: async (req, res, next) => {
+    const { event_id } = req.params;
+
+    const result = await adminModel.deleteLottery(event_id, next);
+
+    successHandle(res, "刪除成功", result);
   },
 };
 

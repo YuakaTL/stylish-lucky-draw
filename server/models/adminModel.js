@@ -211,6 +211,22 @@ const adminModel = {
     });
     return result;
   },
+  deleteLottery: async (event_id, next) => {
+    let result = await prisma.event.update(
+      {
+        data: { status: "cancelled" },
+        where: { event_id: parseInt(event_id) },
+      },
+      (err, result) => {
+        if (err) {
+          next(err);
+        } else {
+          next(null, result);
+        }
+      }
+    );
+    return result;
+  },
 };
 
 export { adminModel };
