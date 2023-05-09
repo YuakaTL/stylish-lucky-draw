@@ -52,8 +52,69 @@ const adminController = {
       update_at: result.last_update_time,
     };
 
-    successHandle(res, "新增成功", lottery_data);
+    successHandle(res, "更新成功", lottery_data);
   },
+  updateLottery: async (req, res, next) => {
+    const { event_name, event_start_time, event_end_time, is_visible, status } =
+      req.body;
+
+    // exist check
+    validator.existValidate(req.params.event_id, "event_id", next);
+    validator.existValidate(event_name, "event_name", next);
+    validator.existValidate(event_start_time, "event_start_time", next);
+    validator.existValidate(event_end_time, "event_end_time", next);
+    validator.existValidate(is_visible, "is_visible", next);
+    validator.existValidate(status, "status", next);
+
+    // handle time format
+    validator.endStartValidate(event_start_time, event_end_time, next);
+    validator.nowStartValidate(event_start_time, next);
+    validator.tenMinutesValidate(event_start_time, next);
+
+    // turn string into boolean
+    const is_visible_bool = is_visible === "true";
+
+    // handle excel data
+    validator.existValidate(req.file, "req.file", next);
+    const filePath = req.file.path;
+    const file = xlsx.readFile(filePath);
+    const sheets = file.SheetNames;
+    let data = [];
+
+    for (let i = 0; i < sheets.length; i++) {
+      const temp = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+      temp.forEach((res) => {
+        data.push(res);
+      });
+    }
+
+    const result = await adminModel.updateLottery(
+      req.params.event_id,
+      event_name,
+      event_start_time,
+      event_end_time,
+      is_visible_bool,
+      status,
+      data,
+      next
+    );
+
+    // return
+    const lottery_data = {
+      event_id: result.event_id,
+      event_name: result.event_name,
+      event_start_time: result.event_start_time,
+      event_end_time: result.event_end_time,
+      is_visible: result.is_visible,
+      status: result.status,
+      event_data: result.event_data,
+      create_at: result.create_time,
+      update_at: result.last_update_time,
+    };
+
+    successHandle(res, "更新成功", lottery_data);
+  },
+
   getRecord: async (req, res, next) => {
     var { id, paging, amount } = req.query;
     validator.numberValidate(id, "member_id", next);
