@@ -125,45 +125,6 @@ const adminModel = {
         },
       });
 
-      // insert data into discount table
-      // use [] for storing return value
-      const discounts = [];
-      for (const item of event_data) {
-        const {
-          獎項名稱: discount_name,
-          折扣: discount_value,
-          領取條件: threshold,
-          庫存張數: inventory,
-        } = item;
-
-        // error handle for excel content
-        validator.existValidate(discount_name, "discount_name", next);
-        validator.existValidate(discount_value, "discount_value", next);
-        validator.existValidate(threshold, "threshold", next);
-        validator.existValidate(inventory, "inventory", next);
-        validator.rangeValidate(discount_value, "discount_value", next);
-        validator.numberValidate(threshold, "inventory", next);
-        validator.numberValidate(inventory, "inventory", next);
-
-        await tx.discount.create({
-          data: {
-            event_id: event.event_id,
-            discount_name,
-            discount_value,
-            threshold,
-            inventory,
-          },
-        });
-
-        // push every discount into discounts
-        discounts.push({
-          discount_name,
-          discount_value,
-          threshold,
-          inventory,
-        });
-      }
-
       // return
       result = {
         event_id: event.event_id,
@@ -174,7 +135,7 @@ const adminModel = {
         status: event.status,
         create_time: event.create_time,
         last_update_time: event.last_update_time,
-        event_data: discounts,
+        event_data,
       };
     });
     return result;
