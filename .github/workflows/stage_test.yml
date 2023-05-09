@@ -2,7 +2,7 @@ name: STAGE_TEST
 
 on:
   push: 
-    branches: ["feature/SLD-33"]
+    branches: ["Main","feature/SLD-33"]
   workflow_dispatch:
 
 jobs:
@@ -43,24 +43,37 @@ jobs:
     - name: Show VM file structure
       run: | 
         ls -la
-    - name: Install K6
-      uses: k6io/action@v2
-
+      
+      # - name: Install K6
+      #   uses: k6io/action@v2
+      
     - name: Run K6 Test 1 (healthcheck_10)
-      run: k6 run load_testing_backend_healthcheck/load_testing_10.js
+      uses: grafana/k6-action@v0.3.0
+      with:
+        script: ./load_testing_backend_healthcheck/load_testing_10.js
     
     - name: Run K6 Test 2 (healthcheck_50)
-      run: k6 run load_testing_backend_healthcheck/load_testing_50.js
+      uses: grafana/k6-action@v0.3.0
+      with:
+        script: ./load_testing_backend_healthcheck/load_testing_50.js
 
     - name: Run K6 Test 3 (healthcheck_100)
-      run: k6 run load_testing_backend_healthcheck/load_testing_100.js
+      uses: grafana/k6-action@v0.3.0
+      with:
+        script: ./load_testing_backend_healthcheck/load_testing_100.js
 
     - name: Run K6 Test 4 (healthcheck_800)
-      run: k6 run load_testing_backend_healthcheck/load_testing_800.js
-    
+      uses: grafana/k6-action@v0.3.0
+      with:
+        script: ./load_testing_backend_healthcheck/load_testing_800.js
+
     - name: Run K6 Test 5 (frontend 800)
-      run: k6 run load_testing_frontend/load_testing_800_frontend.js
-    
+      uses: grafana/k6-action@v0.3.0
+      with:
+        script: ./load_testing_frontend/load_testing_800_frontend.js
+
     - name: Run K6 Test 6 (backend_lotteryDraw)
-      run: k6 run load_testing_backend_lotteryDraw/load_testing_lotteryDraw_SIT.js
+      uses: grafana/k6-action@v0.3.0
+      with:
+        script: ./load_testing_backend_lotteryDraw/load_testing_lotteryDraw_SIT.js
     
