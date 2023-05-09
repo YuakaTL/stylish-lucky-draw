@@ -152,7 +152,7 @@ export default function Event() {
 
   const deleteEvent = (id, data) => async () => {
     let result = await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/lottery/${id}`
+      `http://192.168.50.104:3000/api/v1/admin/lottery/${id}`
     );
     if (result.data.code === "000") {
       messageApi.success("刪除成功");
@@ -162,7 +162,7 @@ export default function Event() {
 
   const fetchData = () => {
     setLoading(true);
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/lottery?amount=999`)
+    fetch(`http://192.168.50.104:3000/api/v1/admin/lottery?amount=999`)
       .then((res) => res.json())
       .then((results) => {
         let data = [];
