@@ -30,7 +30,7 @@ jobs:
     - name: Checkout test code
       uses: actions/checkout@v2
       with:
-        repository: VictorChao996/API-stage-test
+        repository: VictorChao996/SIT-API-test
         ref: main
 
     - name: Check the SIT environment backend API
